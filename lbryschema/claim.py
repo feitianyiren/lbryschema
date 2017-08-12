@@ -1,4 +1,4 @@
-import json
+import simplejson
 from google.protobuf import json_format  # pylint: disable=no-name-in-module
 from google.protobuf.message import DecodeError as DecodeError_pb  # pylint: disable=no-name-in-module,import-error
 
@@ -25,7 +25,7 @@ class ClaimDict(OrderedDict):
     def protobuf_dict(self):
         """Claim dictionary using base64 to represent bytes"""
 
-        return json.loads(json_format.MessageToJson(self.protobuf, True))
+        return simplejson.loads(json_format.MessageToJson(self.protobuf, True), use_decimal=True)
 
     @property
     def protobuf(self):
@@ -110,7 +110,7 @@ class ClaimDict(OrderedDict):
     def json_len(self):
         """Length of json encoded string"""
 
-        return len(json.dumps(self.claim_dict))
+        return len(simplejson.dumps(self.claim_dict, use_decimal=True))
 
     @property
     def claim_dict(self):
@@ -130,7 +130,8 @@ class ClaimDict(OrderedDict):
     @classmethod
     def load_protobuf(cls, protobuf_claim):
         """Load ClaimDict from a protobuf Claim message"""
-        return cls.load_protobuf_dict(json.loads(json_format.MessageToJson(protobuf_claim, True)))
+        return cls.load_protobuf_dict(
+            simplejson.loads(json_format.MessageToJson(protobuf_claim, True), use_decimal=True))
 
     @classmethod
     def load_dict(cls, claim_dict):

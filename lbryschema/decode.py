@@ -1,4 +1,4 @@
-import json
+import simplejson
 
 from lbryschema.error import DecodeError
 from lbryschema.legacy.migrate import migrate as schema_migrator
@@ -54,7 +54,7 @@ def smart_decode(claim_value):
     if claim_value.startswith("{"):
         # try deserializing protobuf, if that fails try parsing from json
         try:
-            decoded_json = json.loads(claim_value)
+            decoded_json = simplejson.loads(claim_value, use_decimal=True)
         except (ValueError, TypeError):
             try:
                 decoded_claim = ClaimDict.deserialize(claim_value)
@@ -69,7 +69,7 @@ def smart_decode(claim_value):
             return decoded_claim
         except (DecodeError, KeyError):
             try:
-                decoded_json = json.loads(claim_value)
+                decoded_json = simplejson.loads(claim_value, use_decimal=True)
             except (ValueError, TypeError):
                 raise DecodeError()
             migrated_claim = migrate_json_claim_value(decoded_json)

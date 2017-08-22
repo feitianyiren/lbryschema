@@ -12,7 +12,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Fixed
-  *
+  * Fix uncaught decode error migrating 0.0.3 claims with a non-dictionary fee.
   *
 
 ### Deprecated

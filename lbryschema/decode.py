@@ -14,7 +14,7 @@ def migrate_json_claim_value(decoded_json):
             if not old_fee[old_fee.keys()[0]]['amount']:
                 del decoded_json['fee']
                 return migrate_json_claim_value(decoded_json)
-    except TypeError:
+    except (TypeError, AttributeError):
         raise DecodeError("Failed to decode claim")
     try:
         pb_migrated = schema_migrator(decoded_json)

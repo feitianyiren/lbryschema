@@ -12,7 +12,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Fixed
-  * Fix uncaught decode error migrating 0.0.3 claims with a non-dictionary fee.
+  *
   *
 
 ### Deprecated
@@ -20,7 +20,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Changed
-  * Changed minimum length for channel name from 4 to 1
+  *
   *
 
 ### Added
@@ -30,6 +30,14 @@ labeled as 2.7.1. Subsequent releases will follow
 ### Removed
   *
   *
+
+
+## [0.0.10] - 2017-08-22
+### Fixed
+ * Fix uncaught decode error migrating 0.0.3 claims with a non-dictionary fee.
+
+### Changed
+ * Changed minimum length for channel name from 4 to 1
 
 
 ## [0.0.9] - 2017-07-24

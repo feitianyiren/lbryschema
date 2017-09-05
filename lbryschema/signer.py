@@ -1,6 +1,6 @@
 import ecdsa
 import hashlib
-from lbryschema.base import base_decode
+from lbryschema.address import decode_address
 from lbryschema.encoding import decode_b64_fields
 from lbryschema.schema.certificate import Certificate
 from lbryschema.schema.claim import Claim
@@ -46,10 +46,9 @@ class NIST_ECDSASigner(object):
 
     def sign_stream_claim(self, claim, claim_address, cert_claim_id):
         validate_claim_id(cert_claim_id)
-        if not base_decode(claim_address, 58):
-            raise Exception("Invalid claim address")
+        decoded_addr = decode_address(claim_address)
 
-        to_sign = "%s%s%s" % (base_decode(claim_address, 58),
+        to_sign = "%s%s%s" % (decoded_addr,
                               claim.serialized_no_signature,
                               cert_claim_id.decode('hex'))
 

@@ -16,3 +16,7 @@ class URIParseError(Exception):
 
 class CertificateError(Exception):
     pass
+
+
+class InvalidAddress(Exception):
+    pass

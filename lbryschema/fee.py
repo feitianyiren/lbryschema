@@ -1,6 +1,6 @@
 from collections import OrderedDict
 
-from lbryschema.base import base_encode, base_decode
+from lbryschema.address import encode_address, decode_address
 from lbryschema.schema import CURRENCY_NAMES, CURRENCY_MAP
 from lbryschema.schema.fee import Fee as FeeHelper
 from lbryschema.schema import fee_pb2
@@ -12,7 +12,7 @@ def migrate(fee):
             "version": "_0_0_1",
             "currency": fee['currency'],
             "amount": fee['amount'],
-            "address": base_decode(fee['address'], 58)
+            "address": decode_address(fee['address'])
         })
     if len(fee.keys()) > 1:
         raise Exception("Invalid fee")
@@ -25,7 +25,7 @@ def migrate(fee):
         "version": "_0_0_1",
         "currency": currency,
         "amount": amount,
-        "address": base_decode(address, 58)
+        "address": decode_address(address)
     })
 
 
@@ -58,7 +58,7 @@ class Fee(OrderedDict):
         pb = {
             "version": self.version,
             "currency": CURRENCY_MAP[self.currency],
-            "address": base_decode(self.address, 58),
+            "address": decode_address(self.address),
             "amount": self.amount
         }
         return FeeHelper.load(pb)
@@ -68,7 +68,7 @@ class Fee(OrderedDict):
         return cls({
                 "version": pb.version,
                 "currency": CURRENCY_NAMES[pb.currency],
-                "address": base_encode(pb.address, 58),
+                "address": encode_address(pb.address),
                 "amount": pb.amount
         })
 

@@ -1,6 +1,6 @@
 import ecdsa
 import hashlib
-from lbryschema.base import base_decode
+from lbryschema.address import decode_address
 from lbryschema.schema import NIST256p, NIST384p, SECP256k1
 
 
@@ -41,9 +41,7 @@ class Validator(object):
         return self.public_key.verify_digest(signature, digest)
 
     def validate_claim_signature(self, claim, claim_address):
-        decoded_address = base_decode(claim_address, 58)
-        if not decoded_address:
-            raise Exception("Invalid claim address")
+        decoded_address = decode_address(claim_address)
 
         # extract and serialize the stream from the claim, then check the signature
         signature = claim.signature.decode('hex')

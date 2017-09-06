@@ -1,8 +1,9 @@
 import base64
 from copy import deepcopy
-from lbryschema.base import base_decode, base_encode
+from lbryschema.address import decode_address, encode_address
 from lbryschema.schema import CLAIM_TYPES, CLAIM_TYPE, STREAM_TYPE, CERTIFICATE_TYPE
 from lbryschema.schema import SIGNATURE
+from lbryschema.error import DecodeError, InvalidAddress
 
 
 def encode_fields(claim_dictionary):
@@ -13,7 +14,10 @@ def encode_fields(claim_dictionary):
     if claim_type == CLAIM_TYPES[STREAM_TYPE]:
         claim_value['source']['source'] = claim_value['source']['source'].encode('hex')
         if 'fee' in claim_value['metadata']:
-            address = base_encode(claim_value['metadata']['fee']['address'], 58)
+            try:
+                address = encode_address(claim_value['metadata']['fee']['address'])
+            except InvalidAddress as err:
+                raise DecodeError("Invalid fee address: %s" % err.message)
             claim_value['metadata']['fee']['address'] = address
     elif claim_type == CLAIM_TYPES[CERTIFICATE_TYPE]:
         public_key = claim_value["publicKey"]
@@ -35,7 +39,10 @@ def decode_fields(claim_dictionary):
     if claim_type == CLAIM_TYPES[STREAM_TYPE]:
         claim_value['source']['source'] = claim_value['source']['source'].decode('hex')
         if 'fee' in claim_value['metadata']:
-            address = base_decode(claim_value['metadata']['fee']['address'], 58)
+            try:
+                address = decode_address(claim_value['metadata']['fee']['address'])
+            except InvalidAddress as err:
+                raise DecodeError("Invalid fee address: %s" % err.message)
             claim_value['metadata']['fee']['address'] = address
     elif claim_type == CLAIM_TYPES[CERTIFICATE_TYPE]:
         public_key = claim_value["publicKey"].decode('hex')

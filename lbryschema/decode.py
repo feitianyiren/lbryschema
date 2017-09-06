@@ -1,6 +1,6 @@
 import json
 
-from lbryschema.error import DecodeError
+from lbryschema.error import DecodeError, InvalidAddress
 from lbryschema.legacy.migrate import migrate as schema_migrator
 from lbryschema.claim import ClaimDict
 
@@ -14,7 +14,7 @@ def migrate_json_claim_value(decoded_json):
             if not old_fee[old_fee.keys()[0]]['amount']:
                 del decoded_json['fee']
                 return migrate_json_claim_value(decoded_json)
-    except (TypeError, AttributeError):
+    except (TypeError, AttributeError, InvalidAddress):
         raise DecodeError("Failed to decode claim")
     try:
         pb_migrated = schema_migrator(decoded_json)
@@ -59,7 +59,7 @@ def smart_decode(claim_value):
             try:
                 decoded_claim = ClaimDict.deserialize(claim_value)
                 return decoded_claim
-            except (DecodeError, KeyError):
+            except (DecodeError, InvalidAddress, KeyError):
                 raise DecodeError()
         migrated_claim = migrate_json_claim_value(decoded_json)
         return migrated_claim
@@ -67,7 +67,7 @@ def smart_decode(claim_value):
         try:
             decoded_claim = ClaimDict.deserialize(claim_value)
             return decoded_claim
-        except (DecodeError, KeyError):
+        except (DecodeError, InvalidAddress, KeyError):
             try:
                 decoded_json = json.loads(claim_value)
             except (ValueError, TypeError):

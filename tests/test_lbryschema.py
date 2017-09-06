@@ -17,7 +17,9 @@ from lbryschema.legacy.migrate import migrate
 from lbryschema.signer import get_signer
 from lbryschema.uri import URI, URIParseError
 from lbryschema.decode import smart_decode
-from lbryschema.error import DecodeError
+from lbryschema.error import DecodeError, InvalidAddress
+from lbryschema.address import decode_address, encode_address
+
 
 parsed_uri_matches = [
     ("test", URI("test"), False),
@@ -335,6 +337,29 @@ class TestSmartDecode(UnitTest):
 
         with self.assertRaises(DecodeError):
             smart_decode("{'bogus_dict':1}")
+
+
+class TestAddressValidation(UnitTest):
+    def test_address_encode_decode(self):
+        valid_addr_hex = "55be482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
+        self.assertEqual(encode_address(valid_addr_hex.decode('hex')),
+                         "bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHyR")
+        self.assertEqual(decode_address("bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHyR"),
+                         valid_addr_hex.decode('hex'))
+
+    def test_address_encode_error(self):
+        invalid_prefix =   "54be482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
+        invalid_checksum = "55be482f953ed0feda4fc5c4d012681b6119274993dc96bf11"
+        invalid_length =   "55482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
+
+        with self.assertRaises(InvalidAddress):
+            encode_address(invalid_prefix.decode('hex'))
+            encode_address(invalid_checksum.decode('hex'))
+            encode_address(invalid_length.decode('hex'))
+
+    def test_address_decode_error(self):
+        with self.assertRaises(InvalidAddress):
+            decode_address("bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHR")
 
 
 if __name__ == '__main__':

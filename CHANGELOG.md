@@ -12,7 +12,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Fixed
-  * Validate the prefix and checksum for lbrycrd addresses
+  *
   *
 
 ### Deprecated
@@ -30,6 +30,11 @@ labeled as 2.7.1. Subsequent releases will follow
 ### Removed
   *
   *
+
+
+## [0.0.11] - 2017-09-18
+### Fixed
+ * Validate the prefix and checksum for lbrycrd addresses
 
 
 ## [0.0.10] - 2017-08-22

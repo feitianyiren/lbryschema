@@ -12,11 +12,14 @@ def validate_claim_id(claim_id):
 
 
 class Validator(object):
+    CURVE_NAME = None
     HASHFUNC = hashlib.sha256
 
     def __init__(self, public_key, certificate_claim_id):
         if not isinstance(public_key, ecdsa.VerifyingKey):
             raise Exception("Key is not type needed for verification")
+        if not self.CURVE_NAME == public_key.curve.name:
+            raise Exception("Curve mismatch")
         self._public_key = public_key
         self._certificate_claim_id = certificate_claim_id
 
@@ -57,14 +60,17 @@ class Validator(object):
 
 
 class NIST256pValidator(Validator):
+    CURVE_NAME = NIST256p
     HASHFUNC = hashlib.sha256
 
 
 class NIST384pValidator(Validator):
+    CURVE_NAME = NIST384p
     HASHFUNC = hashlib.sha384
 
 
 class SECP256k1Validator(Validator):
+    CURVE_NAME = SECP256k1
     HASHFUNC = hashlib.sha256
 
 

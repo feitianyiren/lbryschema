@@ -38,7 +38,7 @@ This is serialized as:
     c87bd924c3f0f23da9442b9f75ffc091b65deefe92477a86a31ea2209766964656f2f6d7034
     
 To publish the uri `lbry://@FleischerSuperman/terroronthemidway`, Reilly must sign the SHA256 of the the combined claim address, claim value, and certificate claim id.
-He states by generating an address for the new name claim:
+He starts by generating an address for the new name claim:
 
     bEGGwBFf39ek6ASJV5YwiUPvDqtpgczCVZ
 

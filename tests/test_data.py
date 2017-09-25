@@ -58,6 +58,16 @@ secp256k1_cert = {
   }
 }
 
+malformed_secp256k1_cert = {
+  "version": "_0_0_1",
+  "claimType": "certificateType",
+  "certificate": {
+    "publicKey": "3056301006072a8648ce3d020106052b8104000a0342000494b3eb91521aa6fb4aaefd0392041bf6f017b42403048bbe88796c402e5dc75667396670a58290b8ce222cd6ee4e57f1087598c28bf02e36276a8f22c20a74a2",
+    "keyType": "NIST256p",
+    "version": "_0_0_1"
+  }
+}
+
 example_003 = {
   "language": "en", 
   "license": "LBRY Inc", 

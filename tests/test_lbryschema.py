@@ -10,7 +10,7 @@ from test_data import claim_id_1, claim_address_1, claim_address_2
 from test_data import nist256p_private_key, claim_010_signed_nist256p, nist256p_cert
 from test_data import nist384p_private_key, claim_010_signed_nist384p, nist384p_cert
 from test_data import secp256k1_private_key, claim_010_signed_secp256k1, secp256k1_cert
-from test_data import hex_encoded_003, decoded_hex_encoded_003
+from test_data import hex_encoded_003, decoded_hex_encoded_003, malformed_secp256k1_cert
 from lbryschema.claim import ClaimDict
 from lbryschema.schema import NIST256p, NIST384p, SECP256k1
 from lbryschema.legacy.migrate import migrate
@@ -360,6 +360,12 @@ class TestAddressValidation(UnitTest):
     def test_address_decode_error(self):
         with self.assertRaises(InvalidAddress):
             decode_address("bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHR")
+
+
+class TestInvalidCertificateCurve(UnitTest):
+    def test_invalid_cert_curve(self):
+        with self.assertRaises(Exception):
+            ClaimDict.load_dict(malformed_secp256k1_cert)
 
 
 if __name__ == '__main__':

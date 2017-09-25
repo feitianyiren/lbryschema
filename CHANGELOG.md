@@ -12,7 +12,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Fixed
-  *
+  * Verify that a Certificate keyType matches that in the der encoded public key
   *
 
 ### Deprecated

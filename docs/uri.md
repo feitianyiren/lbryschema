@@ -54,7 +54,7 @@ followed by at least 4 name characters.
 
 ## Modifiers
 
-Only one modifier is allowed at a time. Only channel claims may have a modifier.
+Only one modifier is allowed at a time.
 
 ### Claim ID
 

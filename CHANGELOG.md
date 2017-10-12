@@ -12,7 +12,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Fixed
-  * Verify that a Certificate keyType matches that in the der encoded public key
+  *
   *
 
 ### Deprecated
@@ -30,6 +30,11 @@ labeled as 2.7.1. Subsequent releases will follow
 ### Removed
   *
   *
+
+
+## [0.0.12] - 2017-10-12
+### Fixed
+ * Verify that a Certificate keyType matches that in the der encoded public key
 
 
 ## [0.0.11] - 2017-09-18

@@ -4,6 +4,7 @@ from lbryschema.schema import claim_pb2 as claim_pb
 from lbryschema.schema import VERSION_MAP
 from lbryschema.schema.signature import Signature
 from lbryschema.schema.certificate import Certificate
+from lbryschema.schema.tag import Tag
 from lbryschema.schema.schema import Schema
 from lbryschema.schema.stream import Stream
 
@@ -11,6 +12,7 @@ from lbryschema.schema.stream import Stream
 class Claim(Schema):
     CLAIM_TYPE_STREAM = 1
     CLAIM_TYPE_CERT = 2
+    CLAIM_TYPE_TAG = 3
 
     @classmethod
     def load(cls, message):
@@ -26,7 +28,6 @@ class Claim(Schema):
                 cert = _cert
             claim_type = Claim.CLAIM_TYPE_CERT
             _message_pb.certificate.MergeFrom(cert)
-
         elif "stream" in _claim:
             _stream = _claim.pop("stream")
             if isinstance(_stream, dict):
@@ -35,6 +36,14 @@ class Claim(Schema):
                 stream = _stream
             claim_type = Claim.CLAIM_TYPE_STREAM
             _message_pb.stream.MergeFrom(stream)
+        elif "tag" in _claim:
+            _tag = _claim.pop("tag")
+            if isinstance(_tag, dict):
+                tag = Tag.load(_tag)
+            else:
+                tag = _tag
+            claim_type = Claim.CLAIM_TYPE_TAG
+            _message_pb.stream.MergeFrom(tag)
         else:
             raise AttributeError
 

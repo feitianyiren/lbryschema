@@ -16,15 +16,16 @@ _sym_db = _symbol_database.Default()
 import stream_pb2 as stream__pb2
 import certificate_pb2 as certificate__pb2
 import signature_pb2 as signature__pb2
+import tag_pb2 as tag__pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='claim.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\x0b\x63laim.proto\x1a\x0cstream.proto\x1a\x11\x63\x65rtificate.proto\x1a\x0fsignature.proto\"\xa7\x02\n\x05\x43laim\x12\x1f\n\x07version\x18\x01 \x02(\x0e\x32\x0e.Claim.Version\x12#\n\tclaimType\x18\x02 \x02(\x0e\x32\x10.Claim.ClaimType\x12\x17\n\x06stream\x18\x03 \x01(\x0b\x32\x07.Stream\x12!\n\x0b\x63\x65rtificate\x18\x04 \x01(\x0b\x32\x0c.Certificate\x12&\n\x12publisherSignature\x18\x05 \x01(\x0b\x32\n.Signature\"*\n\x07Version\x12\x13\n\x0fUNKNOWN_VERSION\x10\x00\x12\n\n\x06_0_0_1\x10\x01\"H\n\tClaimType\x12\x16\n\x12UNKNOWN_CLAIM_TYPE\x10\x00\x12\x0e\n\nstreamType\x10\x01\x12\x13\n\x0f\x63\x65rtificateType\x10\x02')
+  serialized_pb=_b('\n\x0b\x63laim.proto\x1a\x0cstream.proto\x1a\x11\x63\x65rtificate.proto\x1a\x0fsignature.proto\x1a\ttag.proto\"\xc7\x02\n\x05\x43laim\x12\x1f\n\x07version\x18\x01 \x02(\x0e\x32\x0e.Claim.Version\x12#\n\tclaimType\x18\x02 \x02(\x0e\x32\x10.Claim.ClaimType\x12\x17\n\x06stream\x18\x03 \x01(\x0b\x32\x07.Stream\x12!\n\x0b\x63\x65rtificate\x18\x04 \x01(\x0b\x32\x0c.Certificate\x12&\n\x12publisherSignature\x18\x05 \x01(\x0b\x32\n.Signature\x12\x11\n\x03tag\x18\x06 \x01(\x0b\x32\x04.Tag\"*\n\x07Version\x12\x13\n\x0fUNKNOWN_VERSION\x10\x00\x12\n\n\x06_0_0_1\x10\x01\"U\n\tClaimType\x12\x16\n\x12UNKNOWN_CLAIM_TYPE\x10\x00\x12\x0e\n\nstreamType\x10\x01\x12\x13\n\x0f\x63\x65rtificateType\x10\x02\x12\x0b\n\x07tagType\x10\x03')
   ,
-  dependencies=[stream__pb2.DESCRIPTOR,certificate__pb2.DESCRIPTOR,signature__pb2.DESCRIPTOR,])
+  dependencies=[stream__pb2.DESCRIPTOR,certificate__pb2.DESCRIPTOR,signature__pb2.DESCRIPTOR,tag__pb2.DESCRIPTOR,])
 
 
 
@@ -45,8 +46,8 @@ _CLAIM_VERSION = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=245,
-  serialized_end=287,
+  serialized_start=275,
+  serialized_end=317,
 )
 _sym_db.RegisterEnumDescriptor(_CLAIM_VERSION)
 
@@ -68,11 +69,15 @@ _CLAIM_CLAIMTYPE = _descriptor.EnumDescriptor(
       name='certificateType', index=2, number=2,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='tagType', index=3, number=3,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=289,
-  serialized_end=361,
+  serialized_start=319,
+  serialized_end=404,
 )
 _sym_db.RegisterEnumDescriptor(_CLAIM_CLAIMTYPE)
 
@@ -119,6 +124,13 @@ _CLAIM = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='tag', full_name='Claim.tag', index=5,
+      number=6, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -133,8 +145,8 @@ _CLAIM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=66,
-  serialized_end=361,
+  serialized_start=77,
+  serialized_end=404,
 )
 
 _CLAIM.fields_by_name['version'].enum_type = _CLAIM_VERSION
@@ -142,6 +154,7 @@ _CLAIM.fields_by_name['claimType'].enum_type = _CLAIM_CLAIMTYPE
 _CLAIM.fields_by_name['stream'].message_type = stream__pb2._STREAM
 _CLAIM.fields_by_name['certificate'].message_type = certificate__pb2._CERTIFICATE
 _CLAIM.fields_by_name['publisherSignature'].message_type = signature__pb2._SIGNATURE
+_CLAIM.fields_by_name['tag'].message_type = tag__pb2._TAG
 _CLAIM_VERSION.containing_type = _CLAIM
 _CLAIM_CLAIMTYPE.containing_type = _CLAIM
 DESCRIPTOR.message_types_by_name['Claim'] = _CLAIM

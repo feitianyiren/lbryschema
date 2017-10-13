@@ -3,6 +3,7 @@ syntax = "proto2";
 import "stream.proto";
 import "certificate.proto";
 import "signature.proto";
+import "tag.proto";
 
 message Claim {
     enum Version {
@@ -14,9 +15,11 @@ message Claim {
         UNKNOWN_CLAIM_TYPE = 0;
         streamType = 1;
         certificateType = 2;
+        tagType = 3;
     }
     required ClaimType claimType = 2;
     optional Stream stream = 3;
     optional Certificate certificate = 4;
     optional Signature publisherSignature = 5;
+    optional Tag tag = 6;
 }

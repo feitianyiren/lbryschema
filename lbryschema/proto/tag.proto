@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+message Tag {
+    enum Version {
+        UNKNOWN_VERSION = 0;
+        _0_0_1 = 1;
+    }
+    required bytes taggedClaimId = 1;
+}

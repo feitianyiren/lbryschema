@@ -4,7 +4,7 @@ from lbryschema import __version__ as version
 
 requires = [
     'protobuf==3.2.0',
-    'jsonschema==2.5.1',
+    'jsonschema',
     'ecdsa==0.13',
 ]
 

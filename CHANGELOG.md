@@ -20,7 +20,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Changed
-  * Bumped jsonschema requirement to 2.6.0
+  *
   *
 
 ### Added
@@ -30,6 +30,11 @@ labeled as 2.7.1. Subsequent releases will follow
 ### Removed
   *
   *
+
+
+## [0.0.13] - 2017-10-25
+### Changed
+ * Bumped jsonschema requirement to 2.6.0
 
 
 ## [0.0.12] - 2017-10-12

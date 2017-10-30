@@ -5,6 +5,7 @@ from lbryschema.legacy import migrate
 from lbryschema.claim import ClaimDict
 from lbryschema.schema import NIST256p, NIST384p, SECP256k1
 from lbryschema.signer import get_signer
+from lbryschema.decode import smart_decode
 
 unmigrated_003 = {
     'author': 'Samuel Bryan',
@@ -34,6 +35,8 @@ claim_010_signed_nist256p = claim_010_unsigned.sign(nist256p_private_key,
                                                      stream_claim_address,
                                                      cert_claim_id,
                                                      curve=NIST256p)
+
+
 nist256p_cert = ClaimDict.generate_certificate(nist256p_private_key, curve=NIST256p)
 
 # NIST384p test data
@@ -52,8 +55,17 @@ claim_010_signed_secp256k1 = claim_010_unsigned.sign(secp256k1_private_key,
                                                      curve=SECP256k1)
 secp256k1_cert = ClaimDict.generate_certificate(secp256k1_private_key, curve=SECP256k1)
 
+malformed_secp256k1_cert = ClaimDict.generate_certificate(secp256k1_private_key, curve=SECP256k1)
+
+malformed_secp256k1_cert['keyType'] = 'NIST256p'
 
 formatted = lambda x: json.dumps(x.claim_dict, indent=2)
+
+
+
+hex_encoded_003 = claim_010_unsigned.serialized.encode('hex')
+decoded_hex_encoded_003 = smart_decode(hex_encoded_003).claim_dict
+
 
 template = """
 
@@ -75,6 +87,8 @@ nist384p_cert = %s
 
 secp256k1_cert = %s
 
+malformed_secp256k1_cert = %s
+
 example_003 = %s
 
 example_010 = %s
@@ -86,6 +100,10 @@ claim_010_signed_nist256p = %s
 claim_010_signed_nist384p = %s
 
 claim_010_signed_secp256k1 = %s
+
+hex_encoded_003 = \"%s\"
+
+decoded_hex_encoded_003 = %s
 """
 
 test_data = template % (cert_claim_id,
@@ -97,12 +115,15 @@ test_data = template % (cert_claim_id,
                         formatted(nist256p_cert),
                         formatted(nist384p_cert),
                         formatted(secp256k1_cert),
+                        formatted(malformed_secp256k1_cert),
                         json.dumps(unmigrated_003, indent=2),
                         formatted(claim_010_unsigned),
                         claim_010_unsigned.serialized.encode('hex'),
                         formatted(claim_010_signed_nist256p),
                         formatted(claim_010_signed_nist384p),
-                        formatted(claim_010_signed_secp256k1))
+                        formatted(claim_010_signed_secp256k1),
+                        hex_encoded_003,
+                        decoded_hex_encoded_003)
 
 test_data = test_data.replace("false", "False")
 tests_data_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),

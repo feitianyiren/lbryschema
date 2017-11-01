@@ -32,13 +32,13 @@ class Validator(object):
         return self._certificate_claim_id
 
     @staticmethod
-    def key_from_der(der):
+    def verifying_key_from_der(der):
         return ecdsa.VerifyingKey.from_der(der)
 
     @classmethod
     def load_from_certificate(cls, certificate_claim, certificate_claim_id):
         certificate = certificate_claim.certificate
-        return cls(cls.key_from_der(certificate.publicKey), certificate_claim_id)
+        return cls(cls.verifying_key_from_der(certificate.publicKey), certificate_claim_id)
 
     def validate_signature(self, digest, signature):
         return self.public_key.verify_digest(signature, digest)

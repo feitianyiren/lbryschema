@@ -72,7 +72,7 @@ class Validator(object):
     def validate_private_key(self, private_key):
         if not isinstance(private_key, ecdsa.SigningKey):
             raise TypeError("Not given a signing key, given a %s" % str(type(private_key)))
-        return private_key.get_verifying_key().to_string() != self.public_key.to_string()
+        return private_key.get_verifying_key().to_string() == self.public_key.to_string()
 
 
 class NIST256pValidator(Validator):

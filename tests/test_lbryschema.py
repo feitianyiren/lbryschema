@@ -368,5 +368,17 @@ class TestInvalidCertificateCurve(UnitTest):
             ClaimDict.load_dict(malformed_secp256k1_cert)
 
 
+class TestValidatePrivateKey(UnitTest):
+    def test_valid_private_key_for_cert(self):
+        cert_claim = ClaimDict.load_dict(secp256k1_cert)
+        self.assertEqual(cert_claim.validate_private_key(secp256k1_private_key, claim_id_1),
+                         True)
+
+    def test_fail_to_load_wrong_private_key_for_cert(self):
+        cert_claim = ClaimDict.load_dict(secp256k1_cert)
+        self.assertEqual(cert_claim.validate_private_key(nist256p_private_key, claim_id_1),
+                         False)
+
+
 if __name__ == '__main__':
     unittest.main()

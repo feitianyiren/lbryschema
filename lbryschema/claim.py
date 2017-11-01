@@ -167,3 +167,12 @@ class ClaimDict(OrderedDict):
         curve = CURVE_NAMES[certificate.certificate.keyType]
         validator = get_validator(curve).load_from_certificate(certificate, self.certificate_id)
         return validator.validate_claim_signature(self, claim_address)
+
+    def validate_private_key(self, private_key, certificate_id):
+        if not self.is_certificate:
+            return
+        certificate = self.protobuf
+        curve = CURVE_NAMES[certificate.certificate.keyType]
+        validator = get_validator(curve).load_from_certificate(certificate, certificate_id)
+        signing_key = validator.signing_key_from_pem(private_key)
+        return validator.validate_private_key(signing_key)

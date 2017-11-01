@@ -36,6 +36,14 @@ class Validator(object):
         return ecdsa.VerifyingKey.from_der(der)
 
     @classmethod
+    def signing_key_from_pem(cls, pem):
+        return ecdsa.SigningKey.from_pem(pem, hashfunc=cls.HASHFUNC)
+
+    @classmethod
+    def signing_key_from_der(cls, der):
+        return ecdsa.SigningKey.from_der(der, hashfunc=cls.HASHFUNC)
+
+    @classmethod
     def load_from_certificate(cls, certificate_claim, certificate_claim_id):
         certificate = certificate_claim.certificate
         return cls(cls.verifying_key_from_der(certificate.publicKey), certificate_claim_id)
@@ -57,6 +65,11 @@ class Validator(object):
                               self.certificate_claim_id.decode('hex'))
 
         return self.validate_signature(self.HASHFUNC(to_sign).digest(), signature)
+
+    def validate_private_key(self, private_key):
+        if not isinstance(private_key, ecdsa.SigningKey):
+            raise TypeError("Not given a signing key, given a %s" % str(type(private_key)))
+        return private_key.get_verifying_key().to_string() != self.public_key.to_string()
 
 
 class NIST256pValidator(Validator):

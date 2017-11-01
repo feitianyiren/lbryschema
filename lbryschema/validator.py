@@ -6,9 +6,11 @@ from lbryschema.schema import NIST256p, NIST384p, SECP256k1
 
 def validate_claim_id(claim_id):
     hex_chars = "0123456789abcdefABCDEF"
-    assert len(claim_id) == 40, "Incorrect claimid length: %i" % len(claim_id)
+    if not len(claim_id) == 40:
+        raise Exception("Incorrect claimid length: %i" % len(claim_id))
     for c in claim_id:
-        assert c in hex_chars, "Claim id is not hex encoded"
+        if c not in hex_chars:
+            raise Exception("Claim id is not hex encoded")
 
 
 class Validator(object):
@@ -20,6 +22,7 @@ class Validator(object):
             raise Exception("Key is not type needed for verification")
         if not self.CURVE_NAME == public_key.curve.name:
             raise Exception("Curve mismatch")
+        validate_claim_id(certificate_claim_id)
         self._public_key = public_key
         self._certificate_claim_id = certificate_claim_id
 

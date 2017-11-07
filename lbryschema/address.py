@@ -5,7 +5,7 @@ __b58chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 assert len(__b58chars) == 58
 
 __ADDRESS_LENGTH = 25
-__ADDRESS_PREFIXES = {85, 122}
+__ADDRESS_PREFIXES = {85, 122, 111, 196}
 
 
 def sha256(x):

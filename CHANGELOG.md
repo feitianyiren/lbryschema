@@ -24,12 +24,17 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Added
-  * Added `ClaimDict.validate_private_key` helper method to check a private key is for a certificate claim
+  *
   *
 
 ### Removed
   *
   *
+
+
+## [0.0.14] - 2017-11-08
+### Added
+ * Added `ClaimDict.validate_private_key` helper method to check a private key is for a certificate claim
 
 
 ## [0.0.13] - 2017-10-25

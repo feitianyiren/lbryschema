@@ -11,6 +11,7 @@ from test_data import nist256p_private_key, claim_010_signed_nist256p, nist256p_
 from test_data import nist384p_private_key, claim_010_signed_nist384p, nist384p_cert
 from test_data import secp256k1_private_key, claim_010_signed_secp256k1, secp256k1_cert
 from test_data import hex_encoded_003, decoded_hex_encoded_003, malformed_secp256k1_cert
+import lbryschema
 from lbryschema.claim import ClaimDict
 from lbryschema.schema import NIST256p, NIST384p, SECP256k1
 from lbryschema.legacy.migrate import migrate
@@ -339,15 +340,15 @@ class TestSmartDecode(UnitTest):
             smart_decode("{'bogus_dict':1}")
 
 
-class TestAddressValidation(UnitTest):
-    def test_address_encode_decode(self):
+class TestMainnetAddressValidation(UnitTest):
+    def test_mainnet_address_encode_decode(self):
         valid_addr_hex = "55be482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
         self.assertEqual(encode_address(valid_addr_hex.decode('hex')),
                          "bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHyR")
         self.assertEqual(decode_address("bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHyR"),
                          valid_addr_hex.decode('hex'))
 
-    def test_address_encode_error(self):
+    def test_mainnet_address_encode_error(self):
         invalid_prefix =   "54be482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
         invalid_checksum = "55be482f953ed0feda4fc5c4d012681b6119274993dc96bf11"
         invalid_length =   "55482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
@@ -357,9 +358,42 @@ class TestAddressValidation(UnitTest):
             encode_address(invalid_checksum.decode('hex'))
             encode_address(invalid_length.decode('hex'))
 
-    def test_address_decode_error(self):
+    def test_mainnet_address_decode_error(self):
         with self.assertRaises(InvalidAddress):
             decode_address("bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHR")
+        with self.assertRaises(InvalidAddress):
+            decode_address("mzGSynizDwSgURdnFjosZwakSVuZrdE8V4")
+
+
+class TestRegtestAddressValidation(UnitTest):
+    def setUp(self):
+        lbryschema.BLOCKCHAIN_NAME = "lbrycrd_regtest"
+
+    def tearDown(self):
+        lbryschema.BLOCKCHAIN_NAME = "lbrycrd_main"
+
+    def test_regtest_address_encode_decode(self):
+        valid_addr_hex = "6fcdac187757dbf05500f613ada6fdd953d59b9acbf3c9343f"
+        self.assertEqual(encode_address(valid_addr_hex.decode('hex')),
+                         "mzGSynizDwSgURdnFjosZwakSVuZrdE8V4")
+        self.assertEqual(decode_address("mzGSynizDwSgURdnFjosZwakSVuZrdE8V4"),
+                         valid_addr_hex.decode('hex'))
+
+    def test_regtest_address_encode_error(self):
+        invalid_prefix =   "6dcdac187757dbf05500f613ada6fdd953d59b9acbf3c9343f"
+        invalid_checksum = "6fcdac187757dbf05500f613ada6fdd953d59b9acbf3c9343d"
+        invalid_length =   "6fcdac187757dbf05500f613ada6fdd953d59b9acbf3c934"
+
+        with self.assertRaises(InvalidAddress):
+            encode_address(invalid_prefix.decode('hex'))
+            encode_address(invalid_checksum.decode('hex'))
+            encode_address(invalid_length.decode('hex'))
+
+    def test_regtest_address_decode_error(self):
+        with self.assertRaises(InvalidAddress):
+            decode_address("bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHyR")
+        with self.assertRaises(InvalidAddress):
+            decode_address("mzGSynizDwSgURdnFjosZwakSVuZrdE8V5")
 
 
 class TestInvalidCertificateCurve(UnitTest):

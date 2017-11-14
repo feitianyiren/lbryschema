@@ -76,3 +76,13 @@ CURVE_NAMES = {
 
 SHA256 = "sha256"
 SHA384 = "sha384"
+
+
+B58_CHARS = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+assert len(B58_CHARS) == 58
+
+ADDRESS_PREFIXES = {
+    "lbrycrd_main": (85, 122),
+    "lbrycrd_regtest": (111, 196),
+    "lbrycrd_testnet": (111, 196)
+}

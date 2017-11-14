@@ -1,11 +1,7 @@
 import hashlib
+import lbryschema
 from lbryschema.error import InvalidAddress
-
-__b58chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
-assert len(__b58chars) == 58
-
-__ADDRESS_LENGTH = 25
-__ADDRESS_PREFIXES = {85, 122, 111, 196}
+from lbryschema.schema import ADDRESS_LENGTH, ADDRESS_PREFIXES, B58_CHARS
 
 
 def sha256(x):
@@ -19,9 +15,11 @@ def double_sha(x):
 
 
 def validate_lbry_address_bytes(addr_bytes):
-    if len(addr_bytes) != __ADDRESS_LENGTH:
+    if len(addr_bytes) != ADDRESS_LENGTH:
         raise InvalidAddress("Invalid address length: %i" % len(addr_bytes))
-    if ord(addr_bytes[0]) not in __ADDRESS_PREFIXES:
+    if lbryschema.BLOCKCHAIN_NAME not in ADDRESS_PREFIXES:
+        raise Exception("no prefixes configured for blockchain: %s" % lbryschema.BLOCKCHAIN_NAME)
+    if ord(addr_bytes[0]) not in ADDRESS_PREFIXES[lbryschema.BLOCKCHAIN_NAME]:
         raise InvalidAddress("Invalid address prefix: %.2X" % ord(addr_bytes[0]))
     addr_without_checksum, addr_checksum = addr_bytes[:21], addr_bytes[21:]
     if double_sha(addr_without_checksum)[:4] != addr_checksum:
@@ -33,7 +31,7 @@ def decode_address(v):
     """decode and validate a b58 address"""
     long_value = 0L
     for (i, c) in enumerate(v[::-1]):
-        long_value += __b58chars.find(c) * (58**i)
+        long_value += B58_CHARS.find(c) * (58**i)
     result = ''
     while long_value >= 256:
         div, mod = divmod(long_value, 256)
@@ -42,7 +40,7 @@ def decode_address(v):
     result = chr(long_value) + result
     nPad = 0
     for c in v:
-        if c == __b58chars[0]:
+        if c == B58_CHARS[0]:
             nPad += 1
         else:
             break
@@ -59,9 +57,9 @@ def encode_address(addr_bytes):
     result = ''
     while long_value >= 58:
         div, mod = divmod(long_value, 58)
-        result = __b58chars[mod] + result
+        result = B58_CHARS[mod] + result
         long_value = div
-    result = __b58chars[long_value] + result
+    result = B58_CHARS[long_value] + result
     # Bitcoin does a little leading-zero-compression:
     # leading 0-bytes in the input become leading-1s
     nPad = 0
@@ -70,4 +68,4 @@ def encode_address(addr_bytes):
             nPad += 1
         else:
             break
-    return (__b58chars[0]*nPad) + result
+    return (B58_CHARS[0]*nPad) + result

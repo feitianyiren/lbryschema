@@ -20,7 +20,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Changed
-  *
+  * Added address prefixes for regtest and testnet blockchains
   *
 
 ### Added

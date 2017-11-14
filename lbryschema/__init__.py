@@ -1,2 +1,2 @@
-__version__ = "0.0.14"
+__version__ = "0.0.15rc1"
 BLOCKCHAIN_NAME = "lbrycrd_main"

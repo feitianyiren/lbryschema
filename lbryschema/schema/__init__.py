@@ -81,8 +81,20 @@ SHA384 = "sha384"
 B58_CHARS = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 assert len(B58_CHARS) == 58
 
+PUBKEY_ADDRESS = 0
+SCRIPT_ADDRESS = 5
+
 ADDRESS_PREFIXES = {
-    "lbrycrd_main": (85, 122),
-    "lbrycrd_regtest": (111, 196),
-    "lbrycrd_testnet": (111, 196)
+    "lbrycrd_main": {
+        PUBKEY_ADDRESS: 85,
+        SCRIPT_ADDRESS: 122
+    },
+    "lbrycrd_regtest": {
+        PUBKEY_ADDRESS: 111,
+        SCRIPT_ADDRESS: 196
+    },
+    "lbrycrd_testnet": {
+        PUBKEY_ADDRESS: 111,
+        SCRIPT_ADDRESS: 196
+    },
 }

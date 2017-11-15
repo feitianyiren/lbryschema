@@ -41,3 +41,11 @@ def hash_160_bytes_to_address(h160, addrtype=PUBKEY_ADDRESS):
 
 def public_key_to_address(public_key):
     return hash_160_bytes_to_address(hash160(public_key))
+
+
+def address_to_hash_160(addr):
+    bytes = decode_address(addr)
+    prefix, pubkey_bytes, addr_checksum = bytes[0], bytes[1:21], bytes[21:]
+    if prefix == chr(ADDRESS_PREFIXES[lbryschema.BLOCKCHAIN_NAME][PUBKEY_ADDRESS]):
+        return PUBKEY_ADDRESS, pubkey_bytes
+    return SCRIPT_ADDRESS, pubkey_bytes

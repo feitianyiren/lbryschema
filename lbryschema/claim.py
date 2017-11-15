@@ -176,3 +176,17 @@ class ClaimDict(OrderedDict):
         validator = get_validator(curve).load_from_certificate(certificate, certificate_id)
         signing_key = validator.signing_key_from_pem(private_key)
         return validator.validate_private_key(signing_key)
+
+    def get_validator(self, certificate_id):
+        """
+        Get a lbryschema.validator.Validator object for a certificate claim
+
+        :param certificate_id: claim id of this certificate claim
+        :return: None or lbryschema.validator.Validator object
+        """
+
+        claim = self.protobuf
+        if CLAIM_TYPE_NAMES[claim.claimType] != "certificate":
+            return
+        curve = CURVE_NAMES[claim.certificate.keyType]
+        return get_validator(curve).load_from_certificate(claim, certificate_id)

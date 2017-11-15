@@ -1,6 +1,6 @@
 import lbryschema
 from lbryschema.base import b58decode, b58encode
-from lbryschema.hashing import double_sha256
+from lbryschema.hashing import double_sha256, hash160
 from lbryschema.error import InvalidAddress
 from lbryschema.schema import ADDRESS_LENGTH, ADDRESS_PREFIXES, PUBKEY_ADDRESS, SCRIPT_ADDRESS
 
@@ -37,3 +37,7 @@ def hash_160_bytes_to_address(h160, addrtype=PUBKEY_ADDRESS):
     else:
         raise Exception("Invalid address prefix")
     return b58encode(prefix + h160 + double_sha256(prefix + h160)[0:4])
+
+
+def public_key_to_address(public_key):
+    return hash_160_bytes_to_address(hash160(public_key))

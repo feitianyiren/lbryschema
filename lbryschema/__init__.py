@@ -1,7 +1,13 @@
 import os
 
 __version__ = "0.0.15rc1"
-BLOCKCHAIN_NAME = "lbrycrd_main"
+
 BLOCKCHAIN_NAME_ENVVAR = "LBRYSCHEMA_BLOCKCHAIN_NAME"
 if BLOCKCHAIN_NAME_ENVVAR in os.environ:
-    BLOCKCHAIN_NAME = os.environ[BLOCKCHAIN_NAME_ENVVAR]
+    if os.environ[BLOCKCHAIN_NAME_ENVVAR] in ['lbrycrd_main', 'lbrycrd_regtest',
+                                              'lbrycrd_testnet']:
+        BLOCKCHAIN_NAME = os.environ[BLOCKCHAIN_NAME_ENVVAR]
+    else:
+        raise OSError("invalid blockchain name: %s" % os.environ[BLOCKCHAIN_NAME_ENVVAR])
+else:
+    BLOCKCHAIN_NAME = "lbrycrd_main"

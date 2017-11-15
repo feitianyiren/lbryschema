@@ -2,16 +2,18 @@ import hashlib
 
 
 def sha256(x):
+    if isinstance(x, unicode):
+        x = x.encode('utf-8')
     return hashlib.sha256(x).digest()
 
 
 def double_sha256(x):
-    if type(x) is unicode:
-        x = x.encode('utf-8')
     return sha256(sha256(x))
 
 
 def ripemd160(x):
+    if isinstance(x, unicode):
+        x = x.encode('utf-8')
     md = hashlib.new('ripemd160')
     md.update(x)
     return md.digest()

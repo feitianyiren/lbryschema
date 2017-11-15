@@ -1,4 +1,6 @@
-from lbryschema.schema import B58_CHARS
+from lbryschema.schema import B58_CHARS, ADDRESS_CHECKSUM_LENGTH
+from lbryschema.hashing import double_sha256
+from lbryschema.error import InvalidAddress
 
 
 def b58decode(v):
@@ -39,3 +41,21 @@ def b58encode(v):
         else:
             break
     return (B58_CHARS[0] * nPad) + result
+
+
+def validate_b58_checksum(addr_bytes):
+    addr_without_checksum = addr_bytes[:-ADDRESS_CHECKSUM_LENGTH]
+    addr_checksum = addr_bytes[-ADDRESS_CHECKSUM_LENGTH:]
+    if double_sha256(addr_without_checksum)[:ADDRESS_CHECKSUM_LENGTH] != addr_checksum:
+        raise InvalidAddress("Invalid address checksum")
+
+
+def b58decode_strip_checksum(v):
+    addr_bytes = b58decode(v)
+    validate_b58_checksum(addr_bytes)
+    return addr_bytes[:-ADDRESS_CHECKSUM_LENGTH]
+
+
+def b58encode_with_checksum(addr_bytes):
+    addr_checksum = double_sha256(addr_bytes)[:ADDRESS_CHECKSUM_LENGTH]
+    return b58encode(addr_bytes + addr_checksum)

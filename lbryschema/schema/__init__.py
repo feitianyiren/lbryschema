@@ -35,6 +35,8 @@ CURRENCY_NAMES = {
 }
 
 ADDRESS_LENGTH = 25
+ADDRESS_CHECKSUM_LENGTH = 4
+
 VERSION = "version"
 STREAM_TYPE = "streamType"
 CERTIFICATE_TYPE = "certificateType"

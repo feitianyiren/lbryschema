@@ -1,31 +1,35 @@
 import lbryschema
-from lbryschema.base import b58decode, b58encode
+from lbryschema.base import b58encode, b58decode, validate_b58_checksum
 from lbryschema.hashing import double_sha256, hash160
 from lbryschema.error import InvalidAddress
 from lbryschema.schema import ADDRESS_LENGTH, ADDRESS_PREFIXES, PUBKEY_ADDRESS, SCRIPT_ADDRESS
 
 
-def validate_lbry_address_bytes(addr_bytes):
+def validate_address_length(addr_bytes):
     if len(addr_bytes) != ADDRESS_LENGTH:
         raise InvalidAddress("Invalid address length: %i" % len(addr_bytes))
-    if lbryschema.BLOCKCHAIN_NAME not in ADDRESS_PREFIXES:
-        raise Exception("no prefixes configured for blockchain: %s" % lbryschema.BLOCKCHAIN_NAME)
+
+
+def validate_address_prefix(addr_bytes):
     if ord(addr_bytes[0]) not in ADDRESS_PREFIXES[lbryschema.BLOCKCHAIN_NAME].itervalues():
         raise InvalidAddress("Invalid address prefix: %.2X" % ord(addr_bytes[0]))
-    addr_without_checksum, addr_checksum = addr_bytes[:21], addr_bytes[21:]
-    if double_sha256(addr_without_checksum)[:4] != addr_checksum:
-        raise InvalidAddress("Invalid address checksum")
+
+
+def validate_lbrycrd_address_bytes(addr_bytes):
+    validate_address_length(addr_bytes)
+    validate_address_prefix(addr_bytes)
+    validate_b58_checksum(addr_bytes)
     return addr_bytes
 
 
 def decode_address(v):
     """decode and validate a b58 address"""
-    return validate_lbry_address_bytes(b58decode(v))
+    return validate_lbrycrd_address_bytes(b58decode(v))
 
 
 def encode_address(addr_bytes):
     """validate and encode an address as b58"""
-    v = validate_lbry_address_bytes(addr_bytes)
+    v = validate_lbrycrd_address_bytes(addr_bytes)
     return b58encode(v)
 
 

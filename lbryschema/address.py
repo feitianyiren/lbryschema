@@ -49,3 +49,11 @@ def address_to_hash_160(addr):
     if prefix == chr(ADDRESS_PREFIXES[lbryschema.BLOCKCHAIN_NAME][PUBKEY_ADDRESS]):
         return PUBKEY_ADDRESS, pubkey_bytes
     return SCRIPT_ADDRESS, pubkey_bytes
+
+
+def is_address(addr):
+    try:
+        addr_bytes = decode_address(addr)
+        return True
+    except InvalidAddress:
+        return False

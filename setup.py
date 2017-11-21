@@ -15,5 +15,6 @@ setup(
     version=version,
     author="jackrobison@lbry.io",
     install_requires=requires,
+    package_data={'lbryschema': ['include/*.so']},
     packages=find_packages(exclude=['tests'])
 )

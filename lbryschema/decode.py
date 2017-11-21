@@ -28,7 +28,7 @@ def migrate_json_claim_value(decoded_json):
 hex_chars = "0123456789abcdef"
 
 
-def smart_decode(claim_value):
+def smart_decode(claim_value, blockchain_name="lbrycrd_main"):
     """
     Decode a claim value
 
@@ -57,7 +57,7 @@ def smart_decode(claim_value):
             decoded_json = json.loads(claim_value)
         except (ValueError, TypeError):
             try:
-                decoded_claim = ClaimDict.deserialize(claim_value)
+                decoded_claim = ClaimDict.deserialize(claim_value, blockchain_name)
                 return decoded_claim
             except (DecodeError, InvalidAddress, KeyError):
                 raise DecodeError()
@@ -65,7 +65,7 @@ def smart_decode(claim_value):
         return migrated_claim
     else:
         try:
-            decoded_claim = ClaimDict.deserialize(claim_value)
+            decoded_claim = ClaimDict.deserialize(claim_value, blockchain_name)
             return decoded_claim
         except (DecodeError, InvalidAddress, KeyError):
             try:

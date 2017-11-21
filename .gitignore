@@ -5,3 +5,4 @@
 *.egg
 /build
 _trial*
+*.so

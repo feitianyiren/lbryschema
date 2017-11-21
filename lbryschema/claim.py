@@ -4,6 +4,7 @@ from google.protobuf.message import DecodeError as DecodeError_pb  # pylint: dis
 
 from collections import OrderedDict
 
+import lbryschema
 from lbryschema.schema.claim import Claim
 from lbryschema.schema import claim_pb2
 from lbryschema.validator import get_validator
@@ -12,6 +13,7 @@ from lbryschema.schema import NIST256p, CURVE_NAMES, CLAIM_TYPE_NAMES
 from lbryschema.encoding import decode_fields, decode_b64_fields, encode_fields
 from lbryschema.error import DecodeError
 from lbryschema.fee import Fee
+from lbryschema import go_binding
 
 
 class ClaimDict(OrderedDict):
@@ -30,13 +32,11 @@ class ClaimDict(OrderedDict):
     @property
     def protobuf(self):
         """Claim message object"""
-
         return Claim.load(self)
 
     @property
     def serialized(self):
         """Serialized Claim protobuf"""
-
         return self.protobuf.SerializeToString()
 
     @property
@@ -141,15 +141,33 @@ class ClaimDict(OrderedDict):
             raise DecodeError(err.message)
 
     @classmethod
-    def deserialize(cls, serialized):
-        """Load a ClaimDict from a serialized protobuf string"""
+    def deserialize(cls, serialized, try_go=True):
+        """
+        Load a ClaimDict from a serialized protobuf string
 
+        :param serialized: (string) byte string
+        :param try_go: (bool) try to use go binding to accelerate encoding, decoding,
+                       and validation
+        """
+
+        if try_go:
+            # use lbryschema.go to deserialize to a pb dict
+            try:
+                return cls.go_deserialize(serialized)
+            except NotImplementedError:
+                pass
         temp_claim = claim_pb2.Claim()
         try:
-            temp_claim.ParseFromString(serialized)
+            # we can do this instead of ParseFromString and skip an unnecessary Clear()
+            temp_claim.MergeFromString(serialized)
         except DecodeError_pb:
             raise DecodeError(DecodeError_pb)
         return cls.load_protobuf(temp_claim)
+
+    @classmethod
+    def go_deserialize(cls, serialized):
+        return cls.load_protobuf_dict(go_binding.GoDecodeClaimHex(serialized.encode('hex'),
+                                                                  lbryschema.BLOCKCHAIN_NAME))
 
     @classmethod
     def generate_certificate(cls, private_key, curve=NIST256p):
@@ -161,10 +179,27 @@ class ClaimDict(OrderedDict):
         signed = signer.sign_stream_claim(self, claim_address, cert_claim_id)
         return ClaimDict.load_protobuf(signed)
 
-    def validate_signature(self, claim_address, certificate):
+    def validate_signature(self, claim_address, certificate, try_go=True):
         if isinstance(certificate, ClaimDict):
             certificate = certificate.protobuf
         curve = CURVE_NAMES[certificate.certificate.keyType]
+
+        # lbryschema.go only supports SECP256k1 validation currently
+        if try_go and curve == "SECP256k1":
+            # this will be ~5x faster, faster still is the standalone GoValidateSignature function
+            claim_pb = self.protobuf
+            serialized = claim_pb.SerializeToString().encode('hex')
+            if claim_pb.HasField("publisherSignature"):
+                certificate_id = claim_pb.publisherSignature.certificateId.encode('hex')
+            else:
+                certificate_id = None
+            try:
+                return go_binding.GoVerifySignature(serialized,
+                                                    certificate.SerializeToString().encode('hex'),
+                                                    claim_address, certificate_id,
+                                                    lbryschema.BLOCKCHAIN_NAME)
+            except NotImplementedError:
+                pass
         validator = get_validator(curve).load_from_certificate(certificate, self.certificate_id)
         return validator.validate_claim_signature(self, claim_address)
 

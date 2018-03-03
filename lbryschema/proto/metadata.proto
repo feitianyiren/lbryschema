@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-import "fee.proto";
+import "lbryschema/proto/fee.proto";
 
 message Metadata {
     enum Version {

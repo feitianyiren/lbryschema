@@ -1,30 +1,23 @@
-os: linux
-dist: trusty
 language: python
-python: 2.7
-
-notifications:
-  slack:
-    secure: "ZDFg2y0Zy5d5SeIsMrD3SHKq1drwfywBWLpVtCL4vxNtKeuH0qfiaswLl6KZS8zmC5j308oaKuFMhmGySpUMWakivLtctR2lJKfLYEw5rhR92Rp1jP9fUX1gKVd4PGx9pNJaWnwsnbInKikpl0G/5Hf0WWRGI7HzntGUXKEh9df6zM2gnALUnWFNKA41/bYhk84JMjdMsEHV4TCIlDV+114na+ZfmEwVAssLn5zgcxjO6G5CuEiItAmXwzLJFXGYozCjgUMVuk5OOU61gC1JGLxF5YIFi3vFg4Q/2xpi+N/UaE+zvl9dikGiAAoP08EujWtJa2OWCB4vxJPGKGzpJK7uWNvGeZqrftgAfQI2EMSckG9396MAT7OOb+jaDMu++6ZRBt0NH/qTeDvk99Pm5JOHoClk1Ti9KbX+dJFbNITciBRwuYKI52O48hMuvGCGzT+LNKFhFmezb7eK7KCn3gcTJwhXmMkcwK8/PNLHVOp2A7WARrrvE9+kX004Ww5rtiwYpq8FicLu2mavegOjWOGZzsXWRNVzVMlVeusYiO8LG/c8sP7a+GtFA+SY3chzQ6l1harjgJcWkS5bspnO8TD9CE1GklpR5KSwhJ/zmwh2bB5Ugnlxt1K8RZivja+saBRESjJ/4CkyvhCZs3lSnOChJOGgDxlQ9HYSqTYP96k="
+python:
+  - "2.7"
+  - "3.5"
 
 addons:
   apt:
     packages:
     - protobuf-compiler
-    - python-protobuf
     - build-essential
 
 before_install:
-  - virtualenv venv
-  - source venv/bin/activate
   - ./build.sh
 
 install:
-  - pip install -U pip
-  - pip install setuptools_trial
-  - pip install -r requirements.txt
-  - pip install .
-  - pip install pylint
+  - pip install tox-travis coverage
 
 script:
-  - ./run_tests_and_pylint.sh
+  - tox
+
+after_success:
+  - coverage combine tests/
+  - bash <(curl -s https://codecov.io/bash)

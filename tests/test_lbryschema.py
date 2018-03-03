@@ -91,25 +91,25 @@ class TestURIParser(UnitTest):
         for test_string, expected_uri_obj, is_channel in parsed_uri_matches:
             try:
                 # string -> URI
-                self.assertEquals(URI.from_uri_string(test_string), expected_uri_obj, test_string)
+                self.assertEqual(URI.from_uri_string(test_string), expected_uri_obj, test_string)
                 # URI -> dict -> URI
-                self.assertEquals(URI.from_dict(expected_uri_obj.to_dict()), expected_uri_obj,
+                self.assertEqual(URI.from_dict(expected_uri_obj.to_dict()), expected_uri_obj,
                                   test_string)
                 # is_channel
-                self.assertEquals(URI.from_uri_string(test_string).is_channel, is_channel,
+                self.assertEqual(URI.from_uri_string(test_string).is_channel, is_channel,
                                   test_string)
 
                 # convert-to-string test only works if protocol is present in test_string
                 if test_string.startswith('lbry://'):
                     # string -> URI -> string
-                    self.assertEquals(URI.from_uri_string(test_string).to_uri_string(), test_string,
+                    self.assertEqual(URI.from_uri_string(test_string).to_uri_string(), test_string,
                                       test_string)
                     # string -> URI -> dict -> URI -> string
                     uri_dict = URI.from_uri_string(test_string).to_dict()
-                    self.assertEquals(URI.from_dict(uri_dict).to_uri_string(), test_string,
+                    self.assertEqual(URI.from_dict(uri_dict).to_uri_string(), test_string,
                                       test_string)
                     # URI -> dict -> URI -> string
-                    self.assertEquals(URI.from_dict(expected_uri_obj.to_dict()).to_uri_string(),
+                    self.assertEqual(URI.from_dict(expected_uri_obj.to_dict()).to_uri_string(),
                                       test_string, test_string)
             except URIParseError as err:
                 print("ERROR: " + test_string)
@@ -129,12 +129,12 @@ class TestURIParser(UnitTest):
 class TestEncoderAndDecoder(UnitTest):
     def test_encode_decode(self):
         test_claim = ClaimDict.load_dict(example_010)
-        self.assertEquals(test_claim.is_certificate, False)
+        self.assertEqual(test_claim.is_certificate, False)
         self.assertDictEqual(test_claim.claim_dict, example_010)
         test_pb = test_claim.protobuf
         self.assertDictEqual(ClaimDict.load_protobuf(test_pb).claim_dict, example_010)
-        self.assertEquals(test_pb.ByteSize(), ClaimDict.load_protobuf(test_pb).protobuf_len)
-        self.assertEquals(test_claim.json_len, ClaimDict.load_protobuf(test_pb).json_len)
+        self.assertEqual(test_pb.ByteSize(), ClaimDict.load_protobuf(test_pb).protobuf_len)
+        self.assertEqual(test_claim.json_len, ClaimDict.load_protobuf(test_pb).json_len)
 
     def test_deserialize(self):
         deserialized_claim = ClaimDict.deserialize(binascii.unhexlify(example_010_serialized))
@@ -143,7 +143,7 @@ class TestEncoderAndDecoder(UnitTest):
 
     def test_stream_is_not_certificate(self):
         deserialized_claim = ClaimDict.deserialize(binascii.unhexlify(example_010_serialized))
-        self.assertEquals(deserialized_claim.is_certificate, False)
+        self.assertEqual(deserialized_claim.is_certificate, False)
 
 
 class TestISO639(UnitTest):
@@ -182,13 +182,13 @@ class TestMigration(UnitTest):
     def test_migrate_to_010(self):
         migrated_0_1_0 = migrate(example_003)
         self.assertDictEqual(migrated_0_1_0.claim_dict, example_010)
-        self.assertEquals(migrated_0_1_0.is_certificate, False)
+        self.assertEqual(migrated_0_1_0.is_certificate, False)
 
 
 class TestNIST256pSignatures(UnitTest):
     def test_make_ecdsa_cert(self):
         cert = ClaimDict.generate_certificate(nist256p_private_key, curve=NIST256p)
-        self.assertEquals(cert.is_certificate, True)
+        self.assertEqual(cert.is_certificate, True)
         self.assertDictEqual(cert.claim_dict, nist256p_cert)
 
     def test_validate_ecdsa_signature(self):
@@ -197,12 +197,12 @@ class TestNIST256pSignatures(UnitTest):
                                                        claim_address_2, claim_id_1, curve=NIST256p)
         self.assertDictEqual(signed.claim_dict, claim_010_signed_nist256p)
         signed_copy = ClaimDict.load_protobuf(signed.protobuf)
-        self.assertEquals(signed_copy.validate_signature(claim_address_2, cert), True)
+        self.assertEqual(signed_copy.validate_signature(claim_address_2, cert), True)
 
     def test_remove_signature_equals_unsigned(self):
         unsigned = ClaimDict.load_dict(example_010)
         signed = unsigned.sign(nist256p_private_key, claim_address_1, claim_id_1, curve=NIST256p)
-        self.assertEquals(unsigned.serialized, signed.serialized_no_signature)
+        self.assertEqual(unsigned.serialized, signed.serialized_no_signature)
 
     def test_fail_to_validate_fake_ecdsa_signature(self):
         signed = ClaimDict.load_dict(example_010).sign(nist256p_private_key, claim_address_1,
@@ -227,7 +227,7 @@ class TestNIST256pSignatures(UnitTest):
 class TestNIST384pSignatures(UnitTest):
     def test_make_ecdsa_cert(self):
         cert = ClaimDict.generate_certificate(nist384p_private_key, curve=NIST384p)
-        self.assertEquals(cert.is_certificate, True)
+        self.assertEqual(cert.is_certificate, True)
         self.assertDictEqual(cert.claim_dict, nist384p_cert)
 
     def test_validate_ecdsa_signature(self):
@@ -236,12 +236,12 @@ class TestNIST384pSignatures(UnitTest):
                                                        claim_address_2, claim_id_1, curve=NIST384p)
         self.assertDictEqual(signed.claim_dict, claim_010_signed_nist384p)
         signed_copy = ClaimDict.load_protobuf(signed.protobuf)
-        self.assertEquals(signed_copy.validate_signature(claim_address_2, cert), True)
+        self.assertEqual(signed_copy.validate_signature(claim_address_2, cert), True)
 
     def test_remove_signature_equals_unsigned(self):
         unsigned = ClaimDict.load_dict(example_010)
         signed = unsigned.sign(nist384p_private_key, claim_address_1, claim_id_1, curve=NIST384p)
-        self.assertEquals(unsigned.serialized, signed.serialized_no_signature)
+        self.assertEqual(unsigned.serialized, signed.serialized_no_signature)
 
     def test_fail_to_validate_fake_ecdsa_signature(self):
         signed = ClaimDict.load_dict(example_010).sign(nist384p_private_key, claim_address_1,
@@ -266,7 +266,7 @@ class TestNIST384pSignatures(UnitTest):
 class TestSECP256k1Signatures(UnitTest):
     def test_make_ecdsa_cert(self):
         cert = ClaimDict.generate_certificate(secp256k1_private_key, curve=SECP256k1)
-        self.assertEquals(cert.is_certificate, True)
+        self.assertEqual(cert.is_certificate, True)
         self.assertDictEqual(cert.claim_dict, secp256k1_cert)
 
     def test_validate_ecdsa_signature(self):
@@ -276,7 +276,7 @@ class TestSECP256k1Signatures(UnitTest):
                                                        claim_id_1, curve=SECP256k1)
         self.assertDictEqual(signed.claim_dict, claim_010_signed_secp256k1)
         signed_copy = ClaimDict.load_protobuf(signed.protobuf)
-        self.assertEquals(signed_copy.validate_signature(claim_address_2, cert), True)
+        self.assertEqual(signed_copy.validate_signature(claim_address_2, cert), True)
 
     def test_fail_to_sign_with_no_claim_address(self):
         cert = ClaimDict.generate_certificate(secp256k1_private_key, curve=SECP256k1)
@@ -296,7 +296,7 @@ class TestSECP256k1Signatures(UnitTest):
     def test_remove_signature_equals_unsigned(self):
         unsigned = ClaimDict.load_dict(example_010)
         signed = unsigned.sign(secp256k1_private_key, claim_address_1, claim_id_1, curve=SECP256k1)
-        self.assertEquals(unsigned.serialized, signed.serialized_no_signature)
+        self.assertEqual(unsigned.serialized, signed.serialized_no_signature)
 
     def test_fail_to_validate_fake_ecdsa_signature(self):
         signed = ClaimDict.load_dict(example_010).sign(secp256k1_private_key, claim_address_1,

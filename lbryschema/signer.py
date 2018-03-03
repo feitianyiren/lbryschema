@@ -49,9 +49,10 @@ class NIST_ECDSASigner(object):
         validate_claim_id(cert_claim_id)
         decoded_addr = decode_address(claim_address)
 
-        to_sign = "%s%s%s" % (decoded_addr,
-                              claim.serialized_no_signature,
-                              binascii.unhexlify(cert_claim_id))
+        to_sign = bytearray()
+        to_sign.extend(decoded_addr)
+        to_sign.extend(claim.serialized_no_signature)
+        to_sign.extend(binascii.unhexlify(cert_claim_id))
 
         digest = self.HASHFUNC(to_sign).digest()
 

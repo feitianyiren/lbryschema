@@ -45,7 +45,7 @@ class StructuredDict(dict):
 
     def migrate(self, target_version=None):
         if target_version:
-            assert self._versions.index(target_version) > self.versions.index(self.version), \
+            assert self._versions.index(target_version) > self._versions.index(self.version), \
                 "Current version is above target version"
 
         for version, schema, migration in self._upgrade_version_range(self.version, target_version):

@@ -17,7 +17,7 @@ def encode_fields(claim_dictionary):
             try:
                 address = encode_address(claim_value['metadata']['fee']['address'])
             except InvalidAddress as err:
-                raise DecodeError("Invalid fee address: %s" % err.message)
+                raise DecodeError("Invalid fee address: %s" % err)
             claim_value['metadata']['fee']['address'] = address
     elif claim_type == CLAIM_TYPES[CERTIFICATE_TYPE]:
         public_key = claim_value["publicKey"]
@@ -42,7 +42,7 @@ def decode_fields(claim_dictionary):
             try:
                 address = decode_address(claim_value['metadata']['fee']['address'])
             except InvalidAddress as err:
-                raise DecodeError("Invalid fee address: %s" % err.message)
+                raise DecodeError("Invalid fee address: %s" % err)
             claim_value['metadata']['fee']['address'] = address
     elif claim_type == CLAIM_TYPES[CERTIFICATE_TYPE]:
         public_key = binascii.unhexlify(claim_value["publicKey"])

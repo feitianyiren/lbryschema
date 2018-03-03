@@ -1,4 +1,5 @@
 import json
+import binascii
 from google.protobuf import json_format  # pylint: disable=no-name-in-module
 from google.protobuf.message import DecodeError as DecodeError_pb  # pylint: disable=no-name-in-module,import-error
 
@@ -68,7 +69,7 @@ class ClaimDict(OrderedDict):
         claim = self.protobuf
         if not CLAIM_TYPE_NAMES[claim.claimType] == "stream":
             return None
-        return claim.stream.source.source.encode('hex')
+        return binascii.hexlify(claim.stream.source.source)
 
     @property
     def has_fee(self):
@@ -92,13 +93,13 @@ class ClaimDict(OrderedDict):
     def certificate_id(self):
         if not self.has_signature:
             return None
-        return self.protobuf.publisherSignature.certificateId.encode('hex')
+        return binascii.hexlify(self.protobuf.publisherSignature.certificateId)
 
     @property
     def signature(self):
         if not self.has_signature:
             return None
-        return self.protobuf.publisherSignature.signature.encode('hex')
+        return binascii.hexlify(self.protobuf.publisherSignature.signature)
 
     @property
     def protobuf_len(self):
@@ -138,7 +139,7 @@ class ClaimDict(OrderedDict):
         try:
             return cls.load_protobuf(cls(decode_fields(claim_dict)).protobuf)
         except json_format.ParseError as err:
-            raise DecodeError(err.message)
+            raise DecodeError(str(err))
 
     @classmethod
     def deserialize(cls, serialized):

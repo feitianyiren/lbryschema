@@ -49,11 +49,11 @@ def smart_decode(claim_value):
     if not skip_hex:
         try:
             decoded = binascii.unhexlify(claim_value)
-            claim_value = decoded
+            claim_value = decoded.decode()
         except (TypeError, ValueError):
             pass
 
-    if isinstance(claim_value, six.text_type) and claim_value.startswith("{"):
+    if claim_value.startswith("{"):
         try:
             decoded_json = json.loads(claim_value)
         except (ValueError, TypeError):
@@ -68,7 +68,7 @@ def smart_decode(claim_value):
         try:
             decoded_claim = ClaimDict.deserialize(claim_value)
             return decoded_claim
-        except (DecodeError, InvalidAddress, KeyError):
+        except (DecodeError, InvalidAddress, KeyError, TypeError):
             try:
                 decoded_json = json.loads(claim_value)
             except (ValueError, TypeError):

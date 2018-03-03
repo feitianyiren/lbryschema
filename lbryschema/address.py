@@ -17,7 +17,7 @@ def validate_address_prefix(addr_bytes):
     else:
         prefix = ord(addr_bytes[0])
     if prefix not in ADDRESS_PREFIXES[lbryschema.BLOCKCHAIN_NAME].values():
-        raise InvalidAddress("Invalid address prefix: %.2X" % ord(addr_bytes[0]))
+        raise InvalidAddress("Invalid address prefix: %.2X" % prefix)
 
 
 def validate_lbrycrd_address_bytes(addr_bytes):

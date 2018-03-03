@@ -1,13 +1,17 @@
+import six
 import ecdsa
 import hashlib
+import binascii
 from lbryschema.address import decode_address
 from lbryschema.schema import NIST256p, NIST384p, SECP256k1
 
 
 def validate_claim_id(claim_id):
-    hex_chars = "0123456789abcdefABCDEF"
+    hex_chars = b"0123456789abcdefABCDEF"
     if not len(claim_id) == 40:
         raise Exception("Incorrect claimid length: %i" % len(claim_id))
+    if isinstance(claim_id, six.text_type):
+        claim_id = claim_id.encode('utf-8')
     for c in claim_id:
         if c not in hex_chars:
             raise Exception("Claim id is not hex encoded")
@@ -58,14 +62,15 @@ class Validator(object):
         decoded_address = decode_address(claim_address)
 
         # extract and serialize the stream from the claim, then check the signature
-        signature = claim.signature.decode('hex')
+        signature = binascii.unhexlify(claim.signature)
 
         if signature is None:
             raise Exception("No signature to validate")
 
-        to_sign = "%s%s%s" % (decoded_address,
-                              claim.serialized_no_signature,
-                              self.certificate_claim_id.decode('hex'))
+        to_sign = bytearray()
+        to_sign.extend(decoded_address)
+        to_sign.extend(claim.serialized_no_signature)
+        to_sign.extend(binascii.unhexlify(self.certificate_claim_id))
 
         return self.validate_signature(self.HASHFUNC(to_sign).digest(), signature)
 

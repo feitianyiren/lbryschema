@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import ecdsa
+import binascii
 from copy import deepcopy
 import unittest
 
@@ -111,7 +112,7 @@ class TestURIParser(UnitTest):
                     self.assertEquals(URI.from_dict(expected_uri_obj.to_dict()).to_uri_string(),
                                       test_string, test_string)
             except URIParseError as err:
-                print "ERROR: " + test_string
+                print("ERROR: " + test_string)
                 raise
 
     def test_uri_errors(self):
@@ -121,7 +122,7 @@ class TestURIParser(UnitTest):
             except URIParseError:
                 pass
             else:
-                print "\nSuccessfully parsed invalid url: " + test_str
+                print("\nSuccessfully parsed invalid url: " + test_str)
             self.assertRaises(err, URI.from_uri_string, test_str)
 
 
@@ -136,12 +137,12 @@ class TestEncoderAndDecoder(UnitTest):
         self.assertEquals(test_claim.json_len, ClaimDict.load_protobuf(test_pb).json_len)
 
     def test_deserialize(self):
-        deserialized_claim = ClaimDict.deserialize(example_010_serialized.decode('hex'))
+        deserialized_claim = ClaimDict.deserialize(binascii.unhexlify(example_010_serialized))
         self.assertDictEqual(ClaimDict.load_dict(example_010).claim_dict,
                              deserialized_claim.claim_dict)
 
     def test_stream_is_not_certificate(self):
-        deserialized_claim = ClaimDict.deserialize(example_010_serialized.decode('hex'))
+        deserialized_claim = ClaimDict.deserialize(binascii.unhexlify(example_010_serialized))
         self.assertEquals(deserialized_claim.is_certificate, False)
 
 
@@ -343,10 +344,10 @@ class TestSmartDecode(UnitTest):
 class TestMainnetAddressValidation(UnitTest):
     def test_mainnet_address_encode_decode(self):
         valid_addr_hex = "55be482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
-        self.assertEqual(encode_address(valid_addr_hex.decode('hex')),
-                         "bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHyR")
+        self.assertEqual(encode_address(binascii.unhexlify(valid_addr_hex)),
+                         b"bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHyR")
         self.assertEqual(decode_address("bW5PZEvEBNPQRVhwpYXSjabFgbSw1oaHyR"),
-                         valid_addr_hex.decode('hex'))
+                         binascii.unhexlify(valid_addr_hex))
 
     def test_mainnet_address_encode_error(self):
         invalid_prefix =   "54be482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
@@ -354,9 +355,9 @@ class TestMainnetAddressValidation(UnitTest):
         invalid_length =   "55482f953ed0feda4fc5c4d012681b6119274993dc96bf10"
 
         with self.assertRaises(InvalidAddress):
-            encode_address(invalid_prefix.decode('hex'))
-            encode_address(invalid_checksum.decode('hex'))
-            encode_address(invalid_length.decode('hex'))
+            encode_address(binascii.unhexlify(invalid_prefix))
+            encode_address(binascii.unhexlify(invalid_checksum))
+            encode_address(binascii.unhexlify(invalid_length))
 
     def test_mainnet_address_decode_error(self):
         with self.assertRaises(InvalidAddress):
@@ -374,10 +375,10 @@ class TestRegtestAddressValidation(UnitTest):
 
     def test_regtest_address_encode_decode(self):
         valid_addr_hex = "6fcdac187757dbf05500f613ada6fdd953d59b9acbf3c9343f"
-        self.assertEqual(encode_address(valid_addr_hex.decode('hex')),
-                         "mzGSynizDwSgURdnFjosZwakSVuZrdE8V4")
+        self.assertEqual(encode_address(binascii.unhexlify(valid_addr_hex)),
+                         b"mzGSynizDwSgURdnFjosZwakSVuZrdE8V4")
         self.assertEqual(decode_address("mzGSynizDwSgURdnFjosZwakSVuZrdE8V4"),
-                         valid_addr_hex.decode('hex'))
+                         binascii.unhexlify(valid_addr_hex))
 
     def test_regtest_address_encode_error(self):
         invalid_prefix =   "6dcdac187757dbf05500f613ada6fdd953d59b9acbf3c9343f"
@@ -385,9 +386,9 @@ class TestRegtestAddressValidation(UnitTest):
         invalid_length =   "6fcdac187757dbf05500f613ada6fdd953d59b9acbf3c934"
 
         with self.assertRaises(InvalidAddress):
-            encode_address(invalid_prefix.decode('hex'))
-            encode_address(invalid_checksum.decode('hex'))
-            encode_address(invalid_length.decode('hex'))
+            encode_address(binascii.unhexlify(invalid_prefix))
+            encode_address(binascii.unhexlify(invalid_checksum))
+            encode_address(binascii.unhexlify(invalid_length))
 
     def test_regtest_address_decode_error(self):
         with self.assertRaises(InvalidAddress):

@@ -3,14 +3,14 @@ python:
   - "2.7"
   - "3.5"
 
-addons:
-  apt:
-    packages:
-    - protobuf-compiler
-    - build-essential
+#addons:
+  #  apt:
+    #    packages:
+      #    - protobuf-compiler
+      #    - build-essential
 
-before_install:
-  - ./build.sh
+#before_install:
+#  - ./build.sh
 
 install:
   - pip install tox-travis coverage

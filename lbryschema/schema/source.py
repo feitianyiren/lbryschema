@@ -1,6 +1,6 @@
 from copy import deepcopy
-from lbryschema.schema import source_pb2 as source_pb, VERSION_MAP
-from lbryschema.schema import SOURCE_TYPES, LBRY_SD_HASH_LENGTH
+from lbryschema.proto import source_pb2 as source_pb
+from lbryschema.schema import SOURCE_TYPES, LBRY_SD_HASH_LENGTH, VERSION_MAP
 from lbryschema.schema.schema import Schema
 from lbryschema.error import InvalidSourceHashLength
 

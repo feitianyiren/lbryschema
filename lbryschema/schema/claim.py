@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from lbryschema.schema import claim_pb2 as claim_pb
+from lbryschema.proto import claim_pb2 as claim_pb
 from lbryschema.schema import VERSION_MAP
 from lbryschema.schema.signature import Signature
 from lbryschema.schema.certificate import Certificate

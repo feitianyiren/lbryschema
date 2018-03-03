@@ -1,7 +1,8 @@
 from copy import deepcopy
 
 from lbryschema.schema.source import Source
-from lbryschema.schema import VERSION_MAP, stream_pb2 as stream_pb
+from lbryschema.proto import stream_pb2 as stream_pb
+from lbryschema.schema import VERSION_MAP
 from lbryschema.schema.metadata import Metadata
 from lbryschema.schema.schema import Schema
 

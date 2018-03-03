@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 from lbryschema.schema.schema import Schema
-from lbryschema.schema import fee_pb2 as fee_pb
+from lbryschema.proto import fee_pb2 as fee_pb
 from lbryschema.schema import VERSION_MAP, CURRENCY_MAP
 
 

@@ -51,7 +51,7 @@ def migrate_003_to_010(value):
 
     if "fee" in migrated_to_003:
         fee = migrated_to_003["fee"]
-        currency = fee.keys()[0]
+        currency = list(fee.keys())[0]
         amount = fee[currency]['amount']
         address = fee[currency]['address']
         metadata.update(dict(fee={"currency": currency, "version": "_0_0_1",

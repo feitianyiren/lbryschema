@@ -7,17 +7,17 @@ from lbryschema.proto import fee_pb2
 
 
 def migrate(fee):
-    if len(fee.keys()) == 3 and 'currency' in fee and 'amount' in fee and 'address' in fee:
+    if len(list(fee.keys())) == 3 and 'currency' in fee and 'amount' in fee and 'address' in fee:
         return FeeHelper.load({
             "version": "_0_0_1",
             "currency": fee['currency'],
             "amount": fee['amount'],
             "address": decode_address(fee['address'])
         })
-    if len(fee.keys()) > 1:
+    if len(list(fee.keys())) > 1:
         raise Exception("Invalid fee")
 
-    currency = fee.keys()[0]
+    currency = list(fee.keys())[0]
     amount = fee[currency]['amount']
     address = fee[currency]['address']
 

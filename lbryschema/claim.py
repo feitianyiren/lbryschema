@@ -15,11 +15,11 @@ from lbryschema.fee import Fee
 
 
 class ClaimDict(OrderedDict):
-    def __init__(self, claim_dict):
+    def __init__(self, claim_dict=None):
         if isinstance(claim_dict, claim_pb2.Claim):
             raise Exception("To initialize %s with a Claim protobuf use %s.load_protobuf" %
                             (self.__class__.__name__, self.__class__.__name__))
-        OrderedDict.__init__(self, claim_dict)
+        OrderedDict.__init__(self, claim_dict or [])
 
     @property
     def protobuf_dict(self):

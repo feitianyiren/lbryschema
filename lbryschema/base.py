@@ -3,44 +3,93 @@ from lbryschema.hashing import double_sha256
 from lbryschema.error import InvalidAddress
 
 
-def b58decode(v):
-    long_value = 0L
-    for (i, c) in enumerate(v[::-1]):
-        long_value += B58_CHARS.find(c) * (58 ** i)
-    result = ''
-    while long_value >= 256:
-        div, mod = divmod(long_value, 256)
-        result = chr(mod) + result
-        long_value = div
-    result = chr(long_value) + result
-    nPad = 0
-    for c in v:
-        if c == B58_CHARS[0]:
-            nPad += 1
-        else:
-            break
-    return chr(0) * nPad + result
+alphabet = b'123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+
+
+if bytes == str:  # python2
+    iseq, bseq, buffer = (
+        lambda s: map(ord, s),
+        lambda s: ''.join(map(chr, s)),
+        lambda s: s,
+    )
+else:  # python3
+    iseq, bseq, buffer = (
+        lambda s: s,
+        bytes,
+        lambda s: s.buffer,
+    )
+
+
+def scrub_input(v):
+    if isinstance(v, str) and not isinstance(v, bytes):
+        v = v.encode('ascii')
+
+    if not isinstance(v, bytes):
+        raise TypeError(
+            "a bytes-like object is required (also str), not '%s'" %
+            type(v).__name__)
+
+    return v
+
+
+def b58encode_int(i, default_one=True):
+    '''Encode an integer using Base58'''
+    if not i and default_one:
+        return alphabet[0:1]
+    string = b""
+    while i:
+        i, idx = divmod(i, 58)
+        string = alphabet[idx:idx+1] + string
+    return string
 
 
 def b58encode(v):
-    long_value = 0L
-    for (i, c) in enumerate(v[::-1]):
-        long_value += (256 ** i) * ord(c)
-    result = ''
-    while long_value >= 58:
-        div, mod = divmod(long_value, 58)
-        result = B58_CHARS[mod] + result
-        long_value = div
-    result = B58_CHARS[long_value] + result
-    # Bitcoin does a little leading-zero-compression:
-    # leading 0-bytes in the input become leading-1s
-    nPad = 0
-    for c in v:
-        if c == '\0':
-            nPad += 1
-        else:
-            break
-    return (B58_CHARS[0] * nPad) + result
+    '''Encode a string using Base58'''
+
+    v = scrub_input(v)
+
+    nPad = len(v)
+    v = v.lstrip(b'\0')
+    nPad -= len(v)
+
+    p, acc = 1, 0
+    for c in iseq(reversed(v)):
+        acc += p * c
+        p = p << 8
+
+    result = b58encode_int(acc, default_one=False)
+
+    return alphabet[0:1] * nPad + result
+
+
+def b58decode_int(v):
+    '''Decode a Base58 encoded string as an integer'''
+
+    v = scrub_input(v)
+
+    decimal = 0
+    for char in v:
+        decimal = decimal * 58 + alphabet.index(char)
+    return decimal
+
+
+def b58decode(v):
+    '''Decode a Base58 encoded string'''
+
+    v = scrub_input(v)
+
+    origlen = len(v)
+    v = v.lstrip(alphabet[0:1])
+    newlen = len(v)
+
+    acc = b58decode_int(v)
+
+    result = []
+    while acc > 0:
+        acc, mod = divmod(acc, 256)
+        result.append(mod)
+
+    return (b'\0' * (origlen - newlen) + bseq(reversed(result)))
 
 
 def validate_b58_checksum(addr_bytes):

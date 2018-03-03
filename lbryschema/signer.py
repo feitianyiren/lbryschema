@@ -1,5 +1,6 @@
 import ecdsa
 import hashlib
+import binascii
 from lbryschema.address import decode_address
 from lbryschema.encoding import decode_b64_fields
 from lbryschema.schema.certificate import Certificate
@@ -50,7 +51,7 @@ class NIST_ECDSASigner(object):
 
         to_sign = "%s%s%s" % (decoded_addr,
                               claim.serialized_no_signature,
-                              cert_claim_id.decode('hex'))
+                              binascii.unhexlify(cert_claim_id))
 
         digest = self.HASHFUNC(to_sign).digest()
 
@@ -60,7 +61,7 @@ class NIST_ECDSASigner(object):
             "version": V_0_0_1,
             "signatureType": self.CURVE_NAME,
             "signature": self.private_key.sign_digest_deterministic(digest, hashfunc=self.HASHFUNC),
-            "certificateId": cert_claim_id.decode('hex')
+            "certificateId": binascii.unhexlify(cert_claim_id)
         }
 
         msg = {

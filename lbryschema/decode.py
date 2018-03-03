@@ -1,4 +1,6 @@
+import six
 import json
+import binascii
 
 from lbryschema.error import DecodeError, InvalidAddress
 from lbryschema.legacy.migrate import migrate as schema_migrator
@@ -11,7 +13,7 @@ def migrate_json_claim_value(decoded_json):
     try:
         if 'fee' in decoded_json:
             old_fee = decoded_json['fee']
-            if not old_fee[old_fee.keys()[0]]['amount']:
+            if not old_fee[list(old_fee.keys())[0]]['amount']:
                 del decoded_json['fee']
                 return migrate_json_claim_value(decoded_json)
     except (TypeError, AttributeError, InvalidAddress):
@@ -46,20 +48,19 @@ def smart_decode(claim_value):
     skip_hex = sum(1 if char not in hex_chars else 0 for char in claim_value)
     if not skip_hex:
         try:
-            decoded = claim_value.decode('hex')
+            decoded = binascii.unhexlify(claim_value)
             claim_value = decoded
         except (TypeError, ValueError):
             pass
 
-    if claim_value.startswith("{"):
-        # try deserializing protobuf, if that fails try parsing from json
+    if isinstance(claim_value, six.text_type) and claim_value.startswith("{"):
         try:
             decoded_json = json.loads(claim_value)
         except (ValueError, TypeError):
             try:
                 decoded_claim = ClaimDict.deserialize(claim_value)
                 return decoded_claim
-            except (DecodeError, InvalidAddress, KeyError):
+            except (DecodeError, InvalidAddress, KeyError, TypeError):
                 raise DecodeError()
         migrated_claim = migrate_json_claim_value(decoded_json)
         return migrated_claim

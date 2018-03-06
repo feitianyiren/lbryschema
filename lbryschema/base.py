@@ -1,4 +1,5 @@
-from lbryschema.schema import B58_CHARS, ADDRESS_CHECKSUM_LENGTH
+import six
+from lbryschema.schema import ADDRESS_CHECKSUM_LENGTH
 from lbryschema.hashing import double_sha256
 from lbryschema.error import InvalidAddress
 
@@ -6,13 +7,13 @@ from lbryschema.error import InvalidAddress
 alphabet = b'123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 
 
-if bytes == str:  # python2
+if six.PY2:
     iseq, bseq, buffer = (
         lambda s: map(ord, s),
         lambda s: ''.join(map(chr, s)),
         lambda s: s,
     )
-else:  # python3
+elif six.PY3:
     iseq, bseq, buffer = (
         lambda s: s,
         bytes,

@@ -3,7 +3,7 @@ import os
 from lbryschema import __version__ as version
 
 requires = [
-    'protobuf',
+    'protobuf==3.2.0',
     'jsonschema',
     'ecdsa',
 ]

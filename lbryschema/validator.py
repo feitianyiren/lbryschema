@@ -1,3 +1,4 @@
+from string import hexdigits
 import six
 import ecdsa
 import hashlib
@@ -7,14 +8,12 @@ from lbryschema.schema import NIST256p, NIST384p, SECP256k1
 
 
 def validate_claim_id(claim_id):
-    hex_chars = b"0123456789abcdefABCDEF"
     if not len(claim_id) == 40:
         raise Exception("Incorrect claimid length: %i" % len(claim_id))
-    if isinstance(claim_id, six.text_type):
-        claim_id = claim_id.encode('utf-8')
-    for c in claim_id:
-        if c not in hex_chars:
-            raise Exception("Claim id is not hex encoded")
+    if isinstance(claim_id, six.binary_type):
+        claim_id = claim_id.decode('utf-8')
+    if set(claim_id).difference(hexdigits):
+        raise Exception("Claim id is not hex encoded")
 
 
 class Validator(object):

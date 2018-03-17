@@ -1,3 +1,4 @@
+from string import hexdigits
 import json
 import binascii
 
@@ -26,9 +27,6 @@ def migrate_json_claim_value(decoded_json):
         raise DecodeError("Failed to migrate claim: %s" % err)
 
 
-hex_chars = "0123456789abcdef"
-
-
 def smart_decode(claim_value):
     """
     Decode a claim value
@@ -44,7 +42,7 @@ def smart_decode(claim_value):
         return ClaimDict.load_dict(claim_value)
 
     # see if we were given a hex string, try decoding it
-    skip_hex = sum(1 if char not in hex_chars else 0 for char in claim_value)
+    skip_hex = sum(1 if char not in hexdigits else 0 for char in claim_value)
     if not skip_hex:
         try:
             decoded = binascii.unhexlify(claim_value)

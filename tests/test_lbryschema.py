@@ -8,6 +8,7 @@ import unittest
 
 from test_data import example_003, example_010, example_010_serialized
 from test_data import claim_id_1, claim_address_1, claim_address_2
+from test_data import binary_claim, expected_binary_claim_decoded
 from test_data import nist256p_private_key, claim_010_signed_nist256p, nist256p_cert
 from test_data import nist384p_private_key, claim_010_signed_nist384p, nist384p_cert
 from test_data import secp256k1_private_key, claim_010_signed_secp256k1, secp256k1_cert
@@ -329,6 +330,9 @@ class TestMetadata(UnitTest):
 class TestSmartDecode(UnitTest):
     def test_hex_decode(self):
         self.assertEqual(decoded_hex_encoded_003, smart_decode(hex_encoded_003).claim_dict)
+
+    def test_binary_decode(self):
+        self.assertEqual(expected_binary_claim_decoded, smart_decode(binary_claim).claim_dict)
 
     def test_smart_decode_raises(self):
         with self.assertRaises(TypeError):

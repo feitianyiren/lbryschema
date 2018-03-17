@@ -211,4 +211,9 @@ hex_encoded_003="7b22766572223a2022302e302e33222c20226465736372697074696f6e223a2
 
 decoded_hex_encoded_003={u'version': u'_0_0_1', u'claimType': u'streamType', u'stream': {u'source': {u'source': '29ad218c61c599499b22c17228371b5fe9a6e725edc9ef691a7819b3e7406500467852920629fbcddbcacf13d31579d4', u'version': u'_0_0_1', u'contentType': u'image/png', u'sourceType': u'lbry_sd_hash'}, u'version': u'_0_0_1', u'metadata': {u'license': u'Creative Commons Attribution 4.0 International', u'description': u'test', u'language': u'en', u'title': u'test', u'author': u'test', u'version': u'_0_1_0', u'nsfw': False, u'licenseUrl': u'', u'preview': u'', u'thumbnail': u''}}}
 
-
+binary_claim = b'\x08\x01\x10\x02"^\x08\x01\x10\x03"X0V0\x10\x06\x07*\x86H\xce=\x02\x01\x06\x05+\x81\x04\x00\n\x03B\x00\x04\x89U\x97\x1dk\xbc\xd4\xf7\xe2\xb5\xa9a7\xbc\xa4;\xda\x9a\x13\x84<\x05"\xa5\xc3\no;u\xb6\x8co\x10\x81\x8c\x1d\xf2\xe7\t\x9c.\xc8\x9b\x84\xabz:6\x15\xa5\xb3\x16\n\x03YT&M\x98\xec+\xef\x89;'
+expected_binary_claim_decoded = {u'certificate': {u'keyType': u'SECP256k1',
+                  u'publicKey': u'3056301006072a8648ce3d020106052b8104000a034200048955971d6bbcd4f7e2b5a96137bca43bda9a13843c0522a5c30a6f3b75b68c6f10818c1df2e7099c2ec89b84ab7a3a3615a5b3160a035954264d98ec2bef893b',
+                  u'version': u'_0_0_1'},
+                  u'claimType': u'certificateType',
+                  u'version': u'_0_0_1'}

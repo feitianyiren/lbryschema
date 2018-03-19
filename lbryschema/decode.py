@@ -2,6 +2,8 @@ from string import hexdigits
 import json
 import binascii
 
+import six
+
 from lbryschema.error import DecodeError, InvalidAddress
 from lbryschema.legacy.migrate import migrate as schema_migrator
 from lbryschema.claim import ClaimDict
@@ -41,8 +43,14 @@ def smart_decode(claim_value):
     elif isinstance(claim_value, dict):
         return ClaimDict.load_dict(claim_value)
 
+    skip_hex = False
+    if isinstance(claim_value, six.binary_type):
+        try:
+            claim_value = claim_value.decode('utf-8')
+        except UnicodeDecodeError:
+            skip_hex = True
     # see if we were given a hex string, try decoding it
-    skip_hex = sum(1 if char not in hexdigits else 0 for char in claim_value)
+    skip_hex = skip_hex or sum(1 if char not in hexdigits else 0 for char in claim_value)
     if not skip_hex:
         try:
             decoded = binascii.unhexlify(claim_value)
@@ -50,7 +58,7 @@ def smart_decode(claim_value):
         except (TypeError, ValueError):
             pass
 
-    if claim_value.startswith("{"):
+    if isinstance(claim_value, six.text_type) and claim_value.startswith("{"):
         try:
             decoded_json = json.loads(claim_value)
         except (ValueError, TypeError):

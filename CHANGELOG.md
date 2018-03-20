@@ -20,7 +20,7 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Changed
-  * Added address prefixes for regtest and testnet blockchains
+  *
   *
 
 ### Added
@@ -30,6 +30,11 @@ labeled as 2.7.1. Subsequent releases will follow
 ### Removed
   *
   *
+
+
+## [0.0.15] - 2018-03-20
+### Changed
+ * Added address prefixes for regtest and testnet blockchains
 
 
 ## [0.0.14] - 2017-11-08

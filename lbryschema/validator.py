@@ -3,8 +3,12 @@ import six
 import ecdsa
 import hashlib
 import binascii
+
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
+
 from lbryschema.address import decode_address
-from lbryschema.schema import NIST256p, NIST384p, SECP256k1
+from lbryschema.schema import NIST256p, NIST384p, SECP256k1, ECDSA_CURVES
 
 
 def validate_claim_id(claim_id):
@@ -103,3 +107,14 @@ def get_validator(curve):
         return SECP256k1Validator
     else:
         raise Exception("Unknown curve: %s" % str(curve))
+
+
+def get_key_type_from_dem(pubkey_dem):
+    name = serialization.load_der_public_key(pubkey_dem, default_backend()).curve.name
+    if name == 'secp256k1':
+        return ECDSA_CURVES[SECP256k1]
+    elif name == 'secp256r1':
+        return ECDSA_CURVES[NIST256p]
+    elif name == 'secp384r1':
+        return ECDSA_CURVES[NIST384p]
+    raise Exception("unexpected curve: %s" % name)

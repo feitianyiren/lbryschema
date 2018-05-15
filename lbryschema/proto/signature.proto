@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-import "certificate.proto";
+import "lbryschema/proto/certificate.proto";
 
 message Signature {
     enum Version {

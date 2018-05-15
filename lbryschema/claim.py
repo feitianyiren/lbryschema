@@ -1,11 +1,12 @@
 import json
+import binascii
 from google.protobuf import json_format  # pylint: disable=no-name-in-module
 from google.protobuf.message import DecodeError as DecodeError_pb  # pylint: disable=no-name-in-module,import-error
 
 from collections import OrderedDict
 
 from lbryschema.schema.claim import Claim
-from lbryschema.schema import claim_pb2
+from lbryschema.proto import claim_pb2
 from lbryschema.validator import get_validator
 from lbryschema.signer import get_signer
 from lbryschema.schema import NIST256p, CURVE_NAMES, CLAIM_TYPE_NAMES
@@ -15,11 +16,11 @@ from lbryschema.fee import Fee
 
 
 class ClaimDict(OrderedDict):
-    def __init__(self, claim_dict):
+    def __init__(self, claim_dict=None):
         if isinstance(claim_dict, claim_pb2.Claim):
             raise Exception("To initialize %s with a Claim protobuf use %s.load_protobuf" %
                             (self.__class__.__name__, self.__class__.__name__))
-        OrderedDict.__init__(self, claim_dict)
+        OrderedDict.__init__(self, claim_dict or [])
 
     @property
     def protobuf_dict(self):
@@ -68,7 +69,7 @@ class ClaimDict(OrderedDict):
         claim = self.protobuf
         if not CLAIM_TYPE_NAMES[claim.claimType] == "stream":
             return None
-        return claim.stream.source.source.encode('hex')
+        return binascii.hexlify(claim.stream.source.source)
 
     @property
     def has_fee(self):
@@ -92,13 +93,13 @@ class ClaimDict(OrderedDict):
     def certificate_id(self):
         if not self.has_signature:
             return None
-        return self.protobuf.publisherSignature.certificateId.encode('hex')
+        return binascii.hexlify(self.protobuf.publisherSignature.certificateId)
 
     @property
     def signature(self):
         if not self.has_signature:
             return None
-        return self.protobuf.publisherSignature.signature.encode('hex')
+        return binascii.hexlify(self.protobuf.publisherSignature.signature)
 
     @property
     def protobuf_len(self):
@@ -138,7 +139,7 @@ class ClaimDict(OrderedDict):
         try:
             return cls.load_protobuf(cls(decode_fields(claim_dict)).protobuf)
         except json_format.ParseError as err:
-            raise DecodeError(err.message)
+            raise DecodeError(str(err))
 
     @classmethod
     def deserialize(cls, serialized):

@@ -1,6 +1,7 @@
 from copy import deepcopy
 
-from lbryschema.schema import signature_pb2 as signature_pb, VERSION_MAP, ECDSA_CURVES
+from lbryschema.proto import signature_pb2 as signature_pb
+from lbryschema.schema import VERSION_MAP, ECDSA_CURVES
 from lbryschema.schema.schema import Schema
 
 

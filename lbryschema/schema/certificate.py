@@ -1,7 +1,7 @@
 from copy import deepcopy
 from ecdsa import VerifyingKey
 
-from lbryschema.schema import certificate_pb2 as cert_pb
+from lbryschema.proto import certificate_pb2 as cert_pb
 from lbryschema.schema.schema import Schema
 from lbryschema.schema import VERSION_MAP, V_0_0_1, ECDSA_CURVES, CURVE_NAMES
 

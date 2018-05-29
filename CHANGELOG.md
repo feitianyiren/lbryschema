@@ -20,11 +20,11 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Changed
-  *
+  * Ported to Python 3
   *
 
 ### Added
-  *
+  * Tox for testing Python 2/3 compatibility
   *
 
 ### Removed

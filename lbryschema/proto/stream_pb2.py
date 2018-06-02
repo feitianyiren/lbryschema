@@ -13,17 +13,16 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
-from lbryschema.proto import metadata_pb2 as lbryschema_dot_proto_dot_metadata__pb2
-from lbryschema.proto import source_pb2 as lbryschema_dot_proto_dot_source__pb2
+import lbryschema.proto.metadata_pb2
+import lbryschema.proto.source_pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='lbryschema/proto/stream.proto',
   package='',
-  syntax='proto2',
   serialized_pb=_b('\n\x1dlbryschema/proto/stream.proto\x1a\x1flbryschema/proto/metadata.proto\x1a\x1dlbryschema/proto/source.proto\"\x8c\x01\n\x06Stream\x12 \n\x07version\x18\x01 \x02(\x0e\x32\x0f.Stream.Version\x12\x1b\n\x08metadata\x18\x02 \x02(\x0b\x32\t.Metadata\x12\x17\n\x06source\x18\x03 \x02(\x0b\x32\x07.Source\"*\n\x07Version\x12\x13\n\x0fUNKNOWN_VERSION\x10\x00\x12\n\n\x06_0_0_1\x10\x01')
   ,
-  dependencies=[lbryschema_dot_proto_dot_metadata__pb2.DESCRIPTOR,lbryschema_dot_proto_dot_source__pb2.DESCRIPTOR,])
+  dependencies=[lbryschema.proto.metadata_pb2.DESCRIPTOR,lbryschema.proto.source_pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
@@ -88,7 +87,6 @@ _STREAM = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
@@ -97,8 +95,8 @@ _STREAM = _descriptor.Descriptor(
 )
 
 _STREAM.fields_by_name['version'].enum_type = _STREAM_VERSION
-_STREAM.fields_by_name['metadata'].message_type = lbryschema_dot_proto_dot_metadata__pb2._METADATA
-_STREAM.fields_by_name['source'].message_type = lbryschema_dot_proto_dot_source__pb2._SOURCE
+_STREAM.fields_by_name['metadata'].message_type = lbryschema.proto.metadata_pb2._METADATA
+_STREAM.fields_by_name['source'].message_type = lbryschema.proto.source_pb2._SOURCE
 _STREAM_VERSION.containing_type = _STREAM
 DESCRIPTOR.message_types_by_name['Stream'] = _STREAM
 

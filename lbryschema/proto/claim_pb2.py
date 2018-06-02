@@ -13,18 +13,17 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
-from lbryschema.proto import stream_pb2 as lbryschema_dot_proto_dot_stream__pb2
-from lbryschema.proto import certificate_pb2 as lbryschema_dot_proto_dot_certificate__pb2
-from lbryschema.proto import signature_pb2 as lbryschema_dot_proto_dot_signature__pb2
+import lbryschema.proto.stream_pb2
+import lbryschema.proto.certificate_pb2
+import lbryschema.proto.signature_pb2
 
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='lbryschema/proto/claim.proto',
   package='',
-  syntax='proto2',
   serialized_pb=_b('\n\x1clbryschema/proto/claim.proto\x1a\x1dlbryschema/proto/stream.proto\x1a\"lbryschema/proto/certificate.proto\x1a lbryschema/proto/signature.proto\"\xa7\x02\n\x05\x43laim\x12\x1f\n\x07version\x18\x01 \x02(\x0e\x32\x0e.Claim.Version\x12#\n\tclaimType\x18\x02 \x02(\x0e\x32\x10.Claim.ClaimType\x12\x17\n\x06stream\x18\x03 \x01(\x0b\x32\x07.Stream\x12!\n\x0b\x63\x65rtificate\x18\x04 \x01(\x0b\x32\x0c.Certificate\x12&\n\x12publisherSignature\x18\x05 \x01(\x0b\x32\n.Signature\"*\n\x07Version\x12\x13\n\x0fUNKNOWN_VERSION\x10\x00\x12\n\n\x06_0_0_1\x10\x01\"H\n\tClaimType\x12\x16\n\x12UNKNOWN_CLAIM_TYPE\x10\x00\x12\x0e\n\nstreamType\x10\x01\x12\x13\n\x0f\x63\x65rtificateType\x10\x02')
   ,
-  dependencies=[lbryschema_dot_proto_dot_stream__pb2.DESCRIPTOR,lbryschema_dot_proto_dot_certificate__pb2.DESCRIPTOR,lbryschema_dot_proto_dot_signature__pb2.DESCRIPTOR,])
+  dependencies=[lbryschema.proto.stream_pb2.DESCRIPTOR,lbryschema.proto.certificate_pb2.DESCRIPTOR,lbryschema.proto.signature_pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
@@ -130,7 +129,6 @@ _CLAIM = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
-  syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
@@ -140,9 +138,9 @@ _CLAIM = _descriptor.Descriptor(
 
 _CLAIM.fields_by_name['version'].enum_type = _CLAIM_VERSION
 _CLAIM.fields_by_name['claimType'].enum_type = _CLAIM_CLAIMTYPE
-_CLAIM.fields_by_name['stream'].message_type = lbryschema_dot_proto_dot_stream__pb2._STREAM
-_CLAIM.fields_by_name['certificate'].message_type = lbryschema_dot_proto_dot_certificate__pb2._CERTIFICATE
-_CLAIM.fields_by_name['publisherSignature'].message_type = lbryschema_dot_proto_dot_signature__pb2._SIGNATURE
+_CLAIM.fields_by_name['stream'].message_type = lbryschema.proto.stream_pb2._STREAM
+_CLAIM.fields_by_name['certificate'].message_type = lbryschema.proto.certificate_pb2._CERTIFICATE
+_CLAIM.fields_by_name['publisherSignature'].message_type = lbryschema.proto.signature_pb2._SIGNATURE
 _CLAIM_VERSION.containing_type = _CLAIM
 _CLAIM_CLAIMTYPE.containing_type = _CLAIM
 DESCRIPTOR.message_types_by_name['Claim'] = _CLAIM

@@ -25,7 +25,7 @@ labeled as 2.7.1. Subsequent releases will follow
 
 ### Added
   * Tox for testing Python 2/3 compatibility
-  *
+  * publishTimestamp field on Source protobuf definition
 
 ### Removed
   *

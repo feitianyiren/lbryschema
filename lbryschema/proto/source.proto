@@ -13,4 +13,6 @@ message Source {
     required SourceTypes sourceType = 2;
     required bytes source = 3;
     required string contentType = 4;
+
+    optional sint64 publishTime = 5;
 }

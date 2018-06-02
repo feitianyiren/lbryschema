@@ -16,4 +16,6 @@ class Source(Schema):
         _message_pb.sourceType = SOURCE_TYPES[_source.pop('sourceType')]
         _message_pb.source = sd_hash
         _message_pb.contentType = _source.pop('contentType')
+        if 'publishTime' in _source:
+            _message_pb.publishTime = int(_source.pop('publishTime'))
         return cls._load(_source, _message_pb)

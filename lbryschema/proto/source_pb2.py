@@ -18,7 +18,8 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='lbryschema/proto/source.proto',
   package='',
-  serialized_pb=_b('\n\x1dlbryschema/proto/source.proto\"\xde\x01\n\x06Source\x12 \n\x07version\x18\x01 \x02(\x0e\x32\x0f.Source.Version\x12\'\n\nsourceType\x18\x02 \x02(\x0e\x32\x13.Source.SourceTypes\x12\x0e\n\x06source\x18\x03 \x02(\x0c\x12\x13\n\x0b\x63ontentType\x18\x04 \x02(\t\"*\n\x07Version\x12\x13\n\x0fUNKNOWN_VERSION\x10\x00\x12\n\n\x06_0_0_1\x10\x01\"8\n\x0bSourceTypes\x12\x17\n\x13UNKNOWN_SOURCE_TYPE\x10\x00\x12\x10\n\x0clbry_sd_hash\x10\x01')
+  syntax='proto2',
+  serialized_pb=_b('\n\x1dlbryschema/proto/source.proto\"\xf3\x01\n\x06Source\x12 \n\x07version\x18\x01 \x02(\x0e\x32\x0f.Source.Version\x12\'\n\nsourceType\x18\x02 \x02(\x0e\x32\x13.Source.SourceTypes\x12\x0e\n\x06source\x18\x03 \x02(\x0c\x12\x13\n\x0b\x63ontentType\x18\x04 \x02(\t\x12\x13\n\x0bpublishTime\x18\x05 \x01(\x12\"*\n\x07Version\x12\x13\n\x0fUNKNOWN_VERSION\x10\x00\x12\n\n\x06_0_0_1\x10\x01\"8\n\x0bSourceTypes\x12\x17\n\x13UNKNOWN_SOURCE_TYPE\x10\x00\x12\x10\n\x0clbry_sd_hash\x10\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -41,8 +42,8 @@ _SOURCE_VERSION = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=156,
-  serialized_end=198,
+  serialized_start=177,
+  serialized_end=219,
 )
 _sym_db.RegisterEnumDescriptor(_SOURCE_VERSION)
 
@@ -63,8 +64,8 @@ _SOURCE_SOURCETYPES = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=200,
-  serialized_end=256,
+  serialized_start=221,
+  serialized_end=277,
 )
 _sym_db.RegisterEnumDescriptor(_SOURCE_SOURCETYPES)
 
@@ -104,6 +105,13 @@ _SOURCE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='publishTime', full_name='Source.publishTime', index=4,
+      number=5, type=18, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -114,11 +122,12 @@ _SOURCE = _descriptor.Descriptor(
   ],
   options=None,
   is_extendable=False,
+  syntax='proto2',
   extension_ranges=[],
   oneofs=[
   ],
   serialized_start=34,
-  serialized_end=256,
+  serialized_end=277,
 )
 
 _SOURCE.fields_by_name['version'].enum_type = _SOURCE_VERSION

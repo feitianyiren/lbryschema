@@ -146,6 +146,51 @@ class TestEncoderAndDecoder(UnitTest):
         self.assertEqual(deserialized_claim.is_certificate, False)
 
 
+class TestPublishTime(UnitTest):
+    def test_publish_time_preserved_on_claim_dict_when_negative(self):
+        claim_dict = deepcopy(example_010)
+        claim_dict['stream']['source']['publishTime'] = -1
+        claim = ClaimDict.load_dict(claim_dict)
+        serialized = claim.serialized
+        self.assertDictEqual(claim_dict, dict(ClaimDict.deserialize(serialized).claim_dict))
+
+    def test_publish_time_preserved_on_claim_dict_when_positive(self):
+        claim_dict = deepcopy(example_010)
+        claim_dict['stream']['source']['publishTime'] = 1
+        claim = ClaimDict.load_dict(claim_dict)
+        serialized = claim.serialized
+        self.assertDictEqual(claim_dict, dict(ClaimDict.deserialize(serialized).claim_dict))
+
+    def test_publish_time_removed_on_claim_dict_when_zero(self):
+        claim_dict = deepcopy(example_010)
+        claim_dict['stream']['source']['publishTime'] = 0
+        claim = ClaimDict.load_dict(claim_dict)
+        serialized = claim.serialized
+        del claim_dict['stream']['source']['publishTime']
+        self.assertDictEqual(claim_dict, dict(ClaimDict.deserialize(serialized).claim_dict))
+
+    def test_publish_time_preserved_on_protobuf_when_negative(self):
+        claim_dict = deepcopy(example_010)
+        claim_dict['stream']['source']['publishTime'] = -1
+        claim = ClaimDict.load_dict(claim_dict)
+        serialized = claim.serialized
+        self.assertEquals(-1, ClaimDict.deserialize(serialized).protobuf.stream.source.publishTime)
+
+    def test_publish_time_preserved_on_protobuf_when_positive(self):
+        claim_dict = deepcopy(example_010)
+        claim_dict['stream']['source']['publishTime'] = 1
+        claim = ClaimDict.load_dict(claim_dict)
+        serialized = claim.serialized
+        self.assertEquals(1, ClaimDict.deserialize(serialized).protobuf.stream.source.publishTime)
+
+    def test_publish_time_removed_on_claim_dict_when_zero(self):
+        claim_dict = deepcopy(example_010)
+        serialized_no_publish_time = ClaimDict.load_dict(claim_dict).serialized
+        claim_dict['stream']['source']['publishTime'] = 0
+        serialized = ClaimDict.load_dict(claim_dict).serialized
+        self.assertEquals(serialized_no_publish_time, serialized)
+
+
 class TestISO639(UnitTest):
     def test_alpha2(self):
         prefixes = ['en', 'aa', 'ab', 'ae', 'af', 'ak', 'am', 'an', 'ar', 'as', 'av', 'ay', 'az',

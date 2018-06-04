@@ -10,7 +10,7 @@ from lbryschema.proto import claim_pb2
 from lbryschema.validator import get_validator
 from lbryschema.signer import get_signer
 from lbryschema.schema import NIST256p, CURVE_NAMES, CLAIM_TYPE_NAMES
-from lbryschema.encoding import decode_fields, decode_b64_fields, encode_fields
+from lbryschema.encoding import decode_fields, decode_b64_fields, encode_fields, filter_optional_fields_from_dictionary
 from lbryschema.error import DecodeError
 from lbryschema.fee import Fee
 
@@ -26,7 +26,7 @@ class ClaimDict(OrderedDict):
     def protobuf_dict(self):
         """Claim dictionary using base64 to represent bytes"""
 
-        return json.loads(json_format.MessageToJson(self.protobuf, True))
+        return filter_optional_fields_from_dictionary(json.loads(json_format.MessageToJson(self.protobuf, True)))
 
     @property
     def protobuf(self):
@@ -117,7 +117,7 @@ class ClaimDict(OrderedDict):
     def claim_dict(self):
         """Claim dictionary with bytes represented as hex and base58"""
 
-        return dict(encode_fields(self))
+        return filter_optional_fields_from_dictionary(dict(encode_fields(self)))
 
     @classmethod
     def load_protobuf_dict(cls, protobuf_dict):
@@ -126,7 +126,7 @@ class ClaimDict(OrderedDict):
         (as returned by the protobuf json formatter)
         """
 
-        return cls(decode_b64_fields(protobuf_dict))
+        return cls(filter_optional_fields_from_dictionary(decode_b64_fields(protobuf_dict)))
 
     @classmethod
     def load_protobuf(cls, protobuf_claim):
@@ -137,7 +137,7 @@ class ClaimDict(OrderedDict):
     def load_dict(cls, claim_dict):
         """Load ClaimDict from a dictionary with hex and base58 encoded bytes"""
         try:
-            return cls.load_protobuf(cls(decode_fields(claim_dict)).protobuf)
+            return cls.load_protobuf(cls(filter_optional_fields_from_dictionary(decode_fields(claim_dict))).protobuf)
         except json_format.ParseError as err:
             raise DecodeError(str(err))
 

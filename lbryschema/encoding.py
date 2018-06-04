@@ -13,11 +13,6 @@ def encode_fields(claim_dictionary):
     claim_value = claim_dictionary[claim_type]
     if claim_type == CLAIM_TYPES[STREAM_TYPE]:
         claim_value['source']['source'] = binascii.hexlify(claim_value['source']['source']).decode()
-        publish_time = int(claim_dictionary['stream']['source'].get('publishTime', 0))
-        if publish_time == 0:
-            del claim_dictionary['stream']['source']['publishTime']
-        else:
-            claim_dictionary['stream']['source']['publishTime'] = publish_time
         if 'fee' in claim_value['metadata']:
             try:
                 address = encode_address(claim_value['metadata']['fee']['address'])
@@ -80,4 +75,15 @@ def decode_b64_fields(claim_dictionary):
         claim_dictionary[SIGNATURE]['signature'] = encoded_sig
         claim_dictionary[SIGNATURE]['certificateId'] = encoded_cert_id
     claim_dictionary[claim_type] = claim_value
+    return claim_dictionary
+
+
+def filter_optional_fields_from_dictionary(claim_dictionary):
+    """This is necessary so added optional attributes doesn't affect serialization of previously signed claims"""
+    if 'stream' in claim_dictionary and 'publishTime' in claim_dictionary['stream']['source']:
+        publish_time = int(claim_dictionary['stream']['source'].get('publishTime', 0))
+        if publish_time == 0:
+            del claim_dictionary['stream']['source']['publishTime']
+        else:
+            claim_dictionary['stream']['source']['publishTime'] = publish_time
     return claim_dictionary

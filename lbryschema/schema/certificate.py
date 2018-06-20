@@ -1,6 +1,5 @@
 from copy import deepcopy
-from ecdsa import VerifyingKey
-
+from lbryschema.validator import get_key_type_from_dem
 from lbryschema.proto import certificate_pb2 as cert_pb
 from lbryschema.schema.schema import Schema
 from lbryschema.schema import VERSION_MAP, V_0_0_1, ECDSA_CURVES, CURVE_NAMES
@@ -34,8 +33,7 @@ class Certificate(Schema):
             _message_pb.publicKey = _key.publicKey
         if _message_pb.keyType not in CURVE_NAMES:
             raise Exception("Unknown curve")
-        curve_name = CURVE_NAMES[_message_pb.keyType]
-        if _ECDSAKeyHelper(VerifyingKey.from_der(_message_pb.publicKey)).curve_name != curve_name:
+        if get_key_type_from_dem(_message_pb.publicKey) != _message_pb.keyType:
             raise Exception("Curve mismatch")
         return cls._load(_key, _message_pb)
 

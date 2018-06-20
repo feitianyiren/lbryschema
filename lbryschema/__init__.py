@@ -1,6 +1,6 @@
 import os
 
-__version__ = "0.0.16rc2"
+__version__ = "0.0.16rc3"
 
 BLOCKCHAIN_NAME_ENVVAR = "LBRYSCHEMA_BLOCKCHAIN_NAME"
 if BLOCKCHAIN_NAME_ENVVAR in os.environ:

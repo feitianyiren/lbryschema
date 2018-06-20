@@ -1,3 +1,4 @@
+//this doc being moved to lbry.tech, will clean up later.
 ## [Claim](https://github.com/lbryio/lbryschema/blob/master/lbryschema/proto/claim.proto)
 Claims have the encompassing schema:
 

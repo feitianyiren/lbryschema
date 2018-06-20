@@ -21,7 +21,7 @@ labeled as 2.7.1. Subsequent releases will follow
 
 ### Changed
   * Ported to Python 3
-  *
+  * Use cryptography lib to parse and verify signatures
 
 ### Added
   * Tox for testing Python 2/3 compatibility

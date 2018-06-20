@@ -6,6 +6,7 @@ requires = [
     'protobuf==3.2.0',
     'jsonschema',
     'ecdsa',
+    'cryptography'
 ]
 
 base_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), "lbryschema")

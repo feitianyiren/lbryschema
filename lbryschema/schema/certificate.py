@@ -1,5 +1,4 @@
 from copy import deepcopy
-from ecdsa import VerifyingKey
 
 from lbryschema.proto import certificate_pb2 as cert_pb
 from lbryschema.schema.schema import Schema

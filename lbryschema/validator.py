@@ -31,10 +31,6 @@ class Validator(object):
     HASHFUNC = hashlib.sha256
 
     def __init__(self, public_key, certificate_claim_id):
-        if not isinstance(public_key, ecdsa.VerifyingKey):
-            raise Exception("Key is not type needed for verification")
-        if not self.CURVE_NAME == public_key.curve.name:
-            raise Exception("Curve mismatch")
         validate_claim_id(certificate_claim_id)
         self._public_key = public_key
         self._certificate_claim_id = certificate_claim_id
@@ -49,7 +45,7 @@ class Validator(object):
 
     @staticmethod
     def verifying_key_from_der(der):
-        return ecdsa.VerifyingKey.from_der(der)
+        return der  # FIXME: will be used again when signing also uses cryptography lib
 
     @classmethod
     def signing_key_from_pem(cls, pem):
@@ -65,7 +61,7 @@ class Validator(object):
         return cls(cls.verifying_key_from_der(certificate.publicKey), certificate_claim_id)
 
     def validate_signature(self, digest, signature):
-        public_key = load_der_public_key(self.public_key.to_der(), default_backend())
+        public_key = load_der_public_key(self.public_key, default_backend())
         if len(signature) == 64:
             hash = hashes.SHA256()
         elif len(signature) == 96:
@@ -102,7 +98,7 @@ class Validator(object):
     def validate_private_key(self, private_key):
         if not isinstance(private_key, ecdsa.SigningKey):
             raise TypeError("Not given a signing key, given a %s" % str(type(private_key)))
-        return private_key.get_verifying_key().to_string() == self.public_key.to_string()
+        return private_key.get_verifying_key().to_der() == self.public_key
 
 
 class NIST256pValidator(Validator):

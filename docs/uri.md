@@ -1,3 +1,4 @@
+//this doc has been moved to lbry.tech repo, will clean up later.
 # URI
 
 ## Regex

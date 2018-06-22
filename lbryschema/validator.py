@@ -14,7 +14,7 @@ from cryptography.exceptions import InvalidSignature
 from ecdsa.util import sigencode_der
 
 from lbryschema.address import decode_address
-from lbryschema.schema import NIST256p, NIST384p, SECP256k1, ECDSA_CURVES
+from lbryschema.schema import NIST256p, NIST384p, SECP256k1, ECDSA_CURVES, CURVE_NAMES
 
 
 def validate_claim_id(claim_id):
@@ -32,6 +32,8 @@ class Validator(object):
 
     def __init__(self, public_key, certificate_claim_id):
         validate_claim_id(certificate_claim_id)
+        if CURVE_NAMES.get(get_key_type_from_dem(public_key)) != self.CURVE_NAME:
+            raise Exception("Curve mismatch")
         self._public_key = public_key
         self._certificate_claim_id = certificate_claim_id
 
@@ -42,10 +44,6 @@ class Validator(object):
     @property
     def certificate_claim_id(self):
         return self._certificate_claim_id
-
-    @staticmethod
-    def verifying_key_from_der(der):
-        return der  # FIXME: will be used again when signing also uses cryptography lib
 
     @classmethod
     def signing_key_from_pem(cls, pem):
@@ -58,7 +56,7 @@ class Validator(object):
     @classmethod
     def load_from_certificate(cls, certificate_claim, certificate_claim_id):
         certificate = certificate_claim.certificate
-        return cls(cls.verifying_key_from_der(certificate.publicKey), certificate_claim_id)
+        return cls(certificate.publicKey, certificate_claim_id)
 
     def validate_signature(self, digest, signature):
         public_key = load_der_public_key(self.public_key, default_backend())

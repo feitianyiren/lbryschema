@@ -20,17 +20,26 @@ labeled as 2.7.1. Subsequent releases will follow
   *
 
 ### Changed
-  * Ported to Python 3
-  * Use cryptography lib to parse and verify signatures
-  * Remove leftovers from the verifier port
+  *
+  *
 
 ### Added
-  * Tox for testing Python 2/3 compatibility
+  *
   *
 
 ### Removed
   *
   *
+
+
+## [0.0.16] - 2018-06-23
+### Changed
+ * Ported to Python 3
+ * Use cryptography lib to parse and verify signatures
+ * Remove leftovers from the verifier port
+
+### Added
+ * Tox for testing Python 2/3 compatibility
 
 
 ## [0.0.15] - 2018-03-20

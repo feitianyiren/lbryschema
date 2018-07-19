@@ -21,7 +21,7 @@ To install lbryumschema, run the following command (use of a virtualenv is recom
 Usage
 =====
 
-See `docs/schema.md <https://github.com/lbryio/lbryschema/blob/master/docs/schema.md>`_.
+See `resources/schema.md <https://github.com/lbryio/lbry.tech/blob/master/content/resources/schema.md>`_ in the lbry.tech repo.
 
 
 Development
